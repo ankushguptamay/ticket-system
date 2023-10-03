@@ -107,15 +107,46 @@ exports.createTicket = async (req, res) => {
 
 exports.myTicketForEmployee = async (req, res) => {
     try {
-        const ticket = await Ticket.findAll({
+        // Pagination
+        const { page, recordLimit, search } = req.query;
+        const limit = parseInt(recordLimit) || 5;
+        let offSet = 0;
+        let currentPage = 1;
+        if (page) {
+            offSet = (parseInt(page) - 1) * limit;
+            currentPage = parseInt(page);
+        }
+        const condition = [{ createrId: req.organizationMember.id }];
+        // Include search
+        if (search) {
+            condition.push({
+                [Op.or]: [
+                    { ticketNumber: search },
+                    { ticketCategory: search },
+                    { subject: { [Op.substring]: search } },
+                    { status: (search).toUpperCase() }
+                ]
+            })
+        }
+        // Count Tickets
+        const totalTicket = await Ticket.count({
             where: {
-                createrId: req.organizationMember.id
+                [Op.and]: condition
+            }
+        });
+        // Get Tickets
+        const ticket = await Ticket.findAll({
+            limit: limit,
+            offset: offSet,
+            where: {
+                [Op.and]: condition
             },
             include: [{
                 model: TicketAttachment,
                 as: "attachment"
             }],
             order: [
+                ["status", "ASC"],
                 ["createdAt", "DESC"]
             ]
         });
@@ -123,7 +154,194 @@ exports.myTicketForEmployee = async (req, res) => {
         res.status(200).send({
             success: true,
             message: `Tickets fetched successfully!`,
+            totalPage: Math.ceil(totalTicket / limit),
+            currentPage: currentPage,
             data: ticket
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+};
+
+exports.myTicketForITTechnician = async (req, res) => {
+    try {
+        // Pagination
+        const { page, recordLimit, search } = req.query;
+        const limit = parseInt(recordLimit) || 5;
+        let offSet = 0;
+        let currentPage = 1;
+        if (page) {
+            offSet = (parseInt(page) - 1) * limit;
+            currentPage = parseInt(page);
+        }
+        // Get Ticket id assign to technician
+        const condition = [];
+        const associationTable = await ITTechnicians_Ticket.findAll({
+            where: {
+                iTTechnicianId: req.organizationMember.id
+            }
+        });
+        const ticketIdArray = [];
+        for (let i = 0; i < associationTable.length; i++) {
+            ticketIdArray.push(associationTable[i].ticketId);
+        }
+        condition.push({ id: ticketIdArray });
+        // Include search
+        if (search) {
+            condition.push({
+                [Op.or]: [
+                    { ticketNumber: search },
+                    { ticketCategory: search },
+                    { subject: { [Op.substring]: search } },
+                    { status: (search).toUpperCase() }
+                ]
+            })
+        }
+        // Count Tickets
+        const totalTicket = await Ticket.count({
+            where: {
+                [Op.and]: condition
+            }
+        });
+        // Get Tickets
+        const ticket = await Ticket.findAll({
+            limit: limit,
+            offset: offSet,
+            where: {
+                [Op.and]: condition
+            },
+            include: [{
+                model: TicketAttachment,
+                as: "attachment"
+            }, {
+                model: OrganizationMember,
+                as: "employee",
+                attributes: ["id", "name", "department"]
+            }],
+            order: [
+                ["status", "ASC"],
+                ["createdAt", "DESC"]
+            ]
+        });
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `Tickets fetched successfully!`,
+            totalPage: Math.ceil(totalTicket / limit),
+            currentPage: currentPage,
+            data: ticket
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+};
+
+exports.ticketForAdmin = async (req, res) => {
+    try {
+        // Pagination
+        const { page, recordLimit, search } = req.query;
+        const limit = parseInt(recordLimit) || 5;
+        let offSet = 0;
+        let currentPage = 1;
+        if (page) {
+            offSet = (parseInt(page) - 1) * limit;
+            currentPage = parseInt(page);
+        }
+        const condition = [];
+        // Include search
+        if (search) {
+            condition.push({
+                [Op.or]: [
+                    { ticketNumber: search },
+                    { ticketCategory: search },
+                    { subject: { [Op.substring]: search } },
+                    { status: (search).toUpperCase() }
+                ]
+            })
+        }
+        // Count Tickets
+        const totalTicket = await Ticket.count({
+            where: {
+                [Op.and]: condition
+            }
+        });
+        // Get Tickets
+        const ticket = await Ticket.findAll({
+            limit: limit,
+            offset: offSet,
+            where: {
+                [Op.and]: condition
+            },
+            include: [{
+                model: TicketAttachment,
+                as: "attachment"
+            }, {
+                model: OrganizationMember,
+                as: "employee",
+                attributes: ["id", "name", "department"]
+            }],
+            order: [
+                ["status", "ASC"],
+                ["createdAt", "DESC"]
+            ]
+        });
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `Tickets fetched successfully!`,
+            totalPage: Math.ceil(totalTicket / limit),
+            currentPage: currentPage,
+            data: ticket
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+};
+
+exports.updateTicketByTechnician = async (req, res) => {
+    try {
+        const { status, subject, ticketCategory, reply } = req.query;
+        const assign = await ITTechnicians_Ticket.findOne({
+            ticketId: req.params.id,
+            iTTechnicianId: req.organizationMember.id
+        });
+        if (!assign) {
+            res.status(400).send({
+                success: false,
+                message: `Tickets is not assign to you!`
+            });
+        }
+        const ticket = await Ticket.findOne({
+            where: {
+                id: req.params.id
+            }
+        });
+        if (!ticket) {
+            res.status(400).send({
+                success: false,
+                message: `Tickets is not present!`
+            });
+        }
+        await ticket.update({
+            ...ticket,
+            status: status,
+            subject: subject,
+            ticketCategory: ticketCategory,
+            reply: reply
+        });
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `Tickets updated successfully!`
         });
     } catch (err) {
         res.status(500).send({

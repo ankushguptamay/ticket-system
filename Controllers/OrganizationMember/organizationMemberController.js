@@ -143,6 +143,7 @@ exports.getMember = async (req, res) => {
 exports.getAllMember = async (req, res) => {
     try {
         const { page, recordLimit, search } = req.query;
+        // Pagination
         const limit = parseInt(recordLimit) || 5;
         let offSet = 0;
         let currentPage = 1;
@@ -150,7 +151,10 @@ exports.getAllMember = async (req, res) => {
             offSet = (parseInt(page) - 1) * limit;
             currentPage = parseInt(page);
         }
-        const condition = [{ post: { [Op.ne]: "ADMIN" } }];
+        const condition = [
+            { post: { [Op.ne]: "ADMIN" } }
+        ];
+        // Include Search
         if (search) {
             condition.push({
                 [Op.or]: [
@@ -162,57 +166,35 @@ exports.getAllMember = async (req, res) => {
                 ]
             })
         }
-        if (condition.length > 1) {
-            const totalMember = await OrganizationMember.count({
-                where: {
-                    [Op.and]: condition
-                }
-            });
-            const member = await OrganizationMember.findAll({
-                limit: limit,
-                offset: offSet,
-                order: [
-                    ["createdAt", "ASC"]
-                ],
-                where: {
-                    [Op.and]: condition
-                },
-                attributes: { exclude: ['password'] }
-            });
-            // Send final success response
-            res.status(200).send({
-                success: true,
-                message: `Profile Fetched successfully!`,
-                totalPage: Math.ceil(totalMember / limit),
-                currentPage: currentPage,
-                data: member
-            });
-        } else {
-            const totalMember = await OrganizationMember.count({
-                where: {
-                    post: { [Op.ne]: "ADMIN" }
-                }
-            });
-            const member = await OrganizationMember.findAll({
-                limit: limit,
-                offset: offSet,
-                order: [
-                    ["createdAt", "ASC"]
-                ],
-                where: {
-                    post: { [Op.ne]: "ADMIN" }
-                },
-                attributes: { exclude: ['password'] }
-            });
-            // Send final success response
-            res.status(200).send({
-                success: true,
-                message: `Profile Fetched successfully!`,
-                totalPage: Math.ceil(totalMember / limit),
-                currentPage: currentPage,
-                data: member
-            });
-        }
+        // Count Total Member
+        const totalMember = await OrganizationMember.count({
+            where: {
+                [Op.and]: condition
+            }
+        });
+        // Get all member
+        const member = await OrganizationMember.findAll({
+            limit: limit,
+            offset: offSet,
+            order: [
+                ["createdAt", "ASC"]
+            ],
+            where: {
+                [Op.and]: condition
+            },
+            attributes: {
+                exclude: ['password']
+            }
+        });
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `Profile Fetched successfully!`,
+            totalPage: Math.ceil(totalMember / limit),
+            currentPage: currentPage,
+            data: member
+        });
+
     } catch (err) {
         res.status(500).send({
             success: false,

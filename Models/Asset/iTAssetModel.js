@@ -5,13 +5,16 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true
         },
-        email: {
+        itemName: {
             type: DataTypes.STRING
         },
-        mobileNumber: {
+        quantity: {
             type: DataTypes.STRING
         },
-        countryCode: {
+        assetNumver: {
+            type: DataTypes.STRING
+        },
+        assetCategory: {
             type: DataTypes.STRING
         }
     })

@@ -13,5 +13,6 @@ employee.post("/changePassword", verifyOrganizationMemberToken, isEmployeePresen
 employee.get("/employee", verifyOrganizationMemberToken, isEmployeePresent, getMember);
 
 employee.post("/createTicket", verifyOrganizationMemberToken, isEmployeePresent, uploadAttachment.array("attachment", 10), createTicket);
+employee.get("/myTickets", verifyOrganizationMemberToken, isEmployeePresent, myTicketForEmployee);
 
 module.exports = employee;
