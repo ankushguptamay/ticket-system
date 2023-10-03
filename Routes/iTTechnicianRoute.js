@@ -1,13 +1,12 @@
 const express = require("express");
 const iTechnician = express.Router();
 
-const { getMember, changePassword, login } = require('../Controllers/OrganizationMember/organizationMemberController');
+const { getMember, changePassword } = require('../Controllers/OrganizationMember/organizationMemberController');
 
 //middleware
 const { verifyOrganizationMemberToken } = require('../Middlewares/verifyJWT');
 const { isITTechnicianPresent } = require('../Middlewares/isPresent');
 
-iTechnician.post("/login", login);
 iTechnician.post("/changePassword", verifyOrganizationMemberToken, isITTechnicianPresent, changePassword);
 iTechnician.get("/iTechnician", verifyOrganizationMemberToken, isITTechnicianPresent, getMember);
 

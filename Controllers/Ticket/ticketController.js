@@ -4,6 +4,7 @@ const TicketAttachment = db.ticketAttachment;
 const OrganizationMember = db.organizationMember;
 const ITTechnicians_Ticket = db.iTTechnicians_Ticket;
 const { createAttachment } = require("../../Middlewares/validate");
+const { Op } = require('sequelize');
 
 exports.createTicket = async (req, res) => {
     try {
@@ -62,15 +63,33 @@ exports.createTicket = async (req, res) => {
             }
         });
         // Assign to technician
-        const numberOfTechnician = technician.length;
-        if (numberOfTechnician === 1) {
+        const totalTechnician = technician.length;
+        if (totalTechnician === 1) {
             await ITTechnicians_Ticket.create({
                 ticketId: ticket.id,
                 iTTechnicianId: technician[0].id
             });
-        }else{
+        } else {
             const date = JSON.stringify(new Date((new Date).getTime() - (24 * 60 * 60 * 1000)));
             const today = `${date.slice(1, 12)}18:30:00.000Z`;
+            const todaysTotalTicket = await Ticket.count({
+                where: {
+                    createdAt: { [Op.gte]: today }
+                }
+            });
+            const remain = parseInt(todaysTotalTicket) % parseInt(totalTechnician);
+            if (remain === 0) {
+                const lastTechnician = parseInt(totalTechnician) - 1;
+                await ITTechnicians_Ticket.create({
+                    ticketId: ticket.id,
+                    iTTechnicianId: technician[lastTechnician].id
+                });
+            } else {
+                await ITTechnicians_Ticket.create({
+                    ticketId: ticket.id,
+                    iTTechnicianId: technician[remain - 1].id
+                });
+            }
 
         }
         // Send final success response

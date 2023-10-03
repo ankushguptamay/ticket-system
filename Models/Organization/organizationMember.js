@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             defaultValue: 'EMPLOYEE'
         },
-        attendanceID: {
+        attendanceId: {
             type: DataTypes.STRING
         }
     }, {

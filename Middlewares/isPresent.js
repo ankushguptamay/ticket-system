@@ -31,7 +31,7 @@ exports.isEmployeePresent = async (req, res, next) => {
         const organizationMember = await OrganizationMember.findOne({
             where: {
                 [Op.and]: [
-                    { id: req.organizationMember.id }, { email: req.organizationMember.email }
+                    { id: req.organizationMember.id }, { email: req.organizationMember.email }, { post: "EMPLOYEE" }
                 ]
             }
         });
