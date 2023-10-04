@@ -4,6 +4,8 @@ const admin = express.Router();
 const { register, getAdmin, changePassword } = require('../Controllers/Admin/adminController');
 const { registerMember, getAllMember } = require('../Controllers/OrganizationMember/organizationMemberController');
 const { ticketForAdmin } = require('../Controllers/Ticket/ticketController');
+const { createAssetCategory, getAssetCategory, deleteAssetCategory } = require('../Controllers/Asset/assetcategoryController');
+const { getAllAsset, getAllAssetAssignTOEmployee } = require('../Controllers/Asset/assetController');
 
 //middleware
 const { verifyOrganizationMemberToken } = require('../Middlewares/verifyJWT');
@@ -19,5 +21,14 @@ admin.get("/employees", verifyOrganizationMemberToken, isAdminPresent, getAllMem
 
 // Ticket
 admin.get("/tickets", verifyOrganizationMemberToken, isAdminPresent, ticketForAdmin);
+
+// Asset Category
+admin.post("/createAssetCategory", verifyOrganizationMemberToken, isAdminPresent, createAssetCategory);
+admin.gett("/assetCategories", verifyOrganizationMemberToken, isAdminPresent, getAssetCategory);
+admin.put("/deleteAssetCategory/:id", verifyOrganizationMemberToken, isAdminPresent, deleteAssetCategory);
+
+// Asset
+admin.get("/assets", verifyOrganizationMemberToken, isAdminPresent, getAllAsset);
+admin.get("/assetToEmployee/:id", verifyOrganizationMemberToken, isAdminPresent, getAllAssetAssignTOEmployee);
 
 module.exports = admin;

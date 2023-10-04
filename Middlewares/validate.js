@@ -65,3 +65,31 @@ exports.createAttachment = (data) => {
     });
     return schema.validate(data);
 }
+
+exports.createAsset = (data) => {
+    const schema = joi.object().keys({
+        quantity: joi.string().required(),
+        itemName: joi.string().required(),
+        assetCategory: joi.string().required()
+    });
+    return schema.validate(data);
+}
+
+exports.createAssetCategory = (data) => {
+    const schema = joi.object().keys({
+        categoryName: joi.string().required()
+    });
+    return schema.validate(data);
+}
+
+exports.assignAsset = (data) => {
+    const schema = joi.object().keys({
+        status: joi.string().required(),
+        quantity: joi.string().required(),
+        itemName: joi.string().required(),
+        assetCategory: joi.string().required(),
+        date: joi.string().required(),
+        employeeId: joi.string().required()
+    });
+    return schema.validate(data);
+}

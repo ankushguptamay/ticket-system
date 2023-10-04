@@ -1,22 +1,16 @@
 module.exports = (sequelize, DataTypes) => {
-    const ITAsset = sequelize.define("iTAssets", {
+    const AssetCategories = sequelize.define("assetCategories", {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true
         },
-        itemName: {
+        categoryName: {
             type: DataTypes.STRING
         },
-        quantity: {
-            type: DataTypes.INTEGER
-        },
-        assetNumber: {
-            type: DataTypes.STRING
-        },
-        assetCategory: {
+        categoryNumber: {
             type: DataTypes.STRING
         }
     })
-    return ITAsset;
+    return AssetCategories;
 }
