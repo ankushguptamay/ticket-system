@@ -77,7 +77,7 @@ exports.createTicket = async (req, res) => {
         if (totalTechnician === 0) {
             return res.status(200).send({
                 success: true,
-                message: `Ticket created But There are no technician available! Ticket Number ${number}`
+                message: `Ticket created But Technician is not available! Ticket Number ${number}`
             });
         } else if (totalTechnician === 1) {
             await ITTechnicians_Ticket.create({
@@ -105,7 +105,6 @@ exports.createTicket = async (req, res) => {
                     iTTechnicianId: technician[remain - 1].id
                 });
             }
-
         }
         // Send final success response
         res.status(200).send({
@@ -357,6 +356,33 @@ exports.updateTicketByTechnician = async (req, res) => {
         res.status(200).send({
             success: true,
             message: `Tickets updated successfully!`
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+};
+
+exports.getTicketById = async (req, res) => {
+    try {
+        const ticket = await Ticket.findOne({
+            where: {
+                id: req.params.id
+            }
+        });
+        if (!ticket) {
+            res.status(400).send({
+                success: false,
+                message: `Tickets is not present!`
+            });
+        }
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `Ticket fetched successfully!`,
+            data: ticket
         });
     } catch (err) {
         res.status(500).send({

@@ -3,7 +3,7 @@ const admin = express.Router();
 
 const { register, getAdmin, changePassword } = require('../Controllers/Admin/adminController');
 const { registerMember, getAllMember } = require('../Controllers/OrganizationMember/organizationMemberController');
-const { ticketForAdmin } = require('../Controllers/Ticket/ticketController');
+const { ticketForAdmin, getTicketById } = require('../Controllers/Ticket/ticketController');
 const { createAssetCategory, getAssetCategory, deleteAssetCategory } = require('../Controllers/Asset/assetcategoryController');
 const { getAllAsset, getAllAssetAssignTOEmployee } = require('../Controllers/Asset/assetController');
 
@@ -21,6 +21,7 @@ admin.get("/employees", verifyOrganizationMemberToken, isAdminPresent, getAllMem
 
 // Ticket
 admin.get("/tickets", verifyOrganizationMemberToken, isAdminPresent, ticketForAdmin);
+admin.get("/tickets/:id", verifyOrganizationMemberToken, isAdminPresent, getTicketById);
 
 // Asset Category
 admin.post("/createAssetCategory", verifyOrganizationMemberToken, isAdminPresent, createAssetCategory);
