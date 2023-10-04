@@ -60,11 +60,19 @@ exports.createTicket = async (req, res) => {
         const technician = await OrganizationMember.findAll({
             where: {
                 post: "IT TECHNICIAN"
-            }
+            },
+            order: [
+                ["createdAt", "ASC"]
+            ]
         });
         // Assign to technician
         const totalTechnician = technician.length;
-        if (totalTechnician === 1) {
+        if (totalTechnician === 0) {
+            return res.status(200).send({
+                success: true,
+                message: `Ticket created But There are no technician available! Ticket Number ${number}`
+            });
+        } else if (totalTechnician === 1) {
             await ITTechnicians_Ticket.create({
                 ticketId: ticket.id,
                 iTTechnicianId: technician[0].id
@@ -95,7 +103,7 @@ exports.createTicket = async (req, res) => {
         // Send final success response
         res.status(200).send({
             success: true,
-            message: `Ticket created successfully!`,
+            message: `Ticket created successfully! Ticket Number ${number}`,
         });
     } catch (err) {
         res.status(500).send({
