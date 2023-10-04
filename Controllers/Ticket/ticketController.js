@@ -20,9 +20,16 @@ exports.createTicket = async (req, res) => {
             return res.status(400).send(error.details[0].message);
         }
         // Generating ticket number
+        const date = JSON.stringify(new Date((new Date).getTime() - (24 * 60 * 60 * 1000)));
+        const Day = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+        const dayNumber = (new Date).getDay();
+        const today = `${date.slice(1, 12)}18:30:00.000Z`;
         const { ticketCategory, subject, details } = req.body;
         let number;
         const tickets = await Ticket.findAll({
+            where: {
+                createdAt: { [Op.gt]: today }
+            },
             order: [
                 ['createdAt', 'ASC']
             ]
@@ -31,12 +38,12 @@ exports.createTicket = async (req, res) => {
         const year = new Date().toISOString().slice(2, 4);
         const month = new Date().toISOString().slice(5, 7);
         if (tickets.length == 0) {
-            number = day + month + year + 1000;
+            number = day + month + year + Day[dayNumber] + 1;
         } else {
             let lastTicket = tickets[tickets.length - 1];
-            let lastDigits = lastTicket.ticketNumber.substring(6);
+            let lastDigits = lastTicket.ticketNumber.substring(9);
             let incrementedDigits = parseInt(lastDigits, 10) + 1;
-            number = day + month + year + incrementedDigits;
+            number = day + month + year + Day[dayNumber] + incrementedDigits;
         }
         // Create database
         const ticket = await Ticket.create({

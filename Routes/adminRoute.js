@@ -24,7 +24,7 @@ admin.get("/tickets", verifyOrganizationMemberToken, isAdminPresent, ticketForAd
 
 // Asset Category
 admin.post("/createAssetCategory", verifyOrganizationMemberToken, isAdminPresent, createAssetCategory);
-admin.gett("/assetCategories", verifyOrganizationMemberToken, isAdminPresent, getAssetCategory);
+admin.get("/assetCategories", verifyOrganizationMemberToken, isAdminPresent, getAssetCategory);
 admin.put("/deleteAssetCategory/:id", verifyOrganizationMemberToken, isAdminPresent, deleteAssetCategory);
 
 // Asset
