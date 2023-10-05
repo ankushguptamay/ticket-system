@@ -323,13 +323,14 @@ exports.ticketForAdmin = async (req, res) => {
 
 exports.updateTicketByTechnician = async (req, res) => {
     try {
-        const { status, subject, ticketCategory, reply } = req.query;
+        const { status, subject, ticketCategory, reply } = req.body;
+        console.log(req.body);
         const assign = await ITTechnicians_Ticket.findOne({
             ticketId: req.params.id,
             iTTechnicianId: req.organizationMember.id
         });
         if (!assign) {
-            res.status(400).send({
+            return res.status(400).send({
                 success: false,
                 message: `Tickets is not assign to you!`
             });
@@ -340,7 +341,7 @@ exports.updateTicketByTechnician = async (req, res) => {
             }
         });
         if (!ticket) {
-            res.status(400).send({
+            return res.status(400).send({
                 success: false,
                 message: `Tickets is not present!`
             });
@@ -373,7 +374,7 @@ exports.getTicketById = async (req, res) => {
             }
         });
         if (!ticket) {
-            res.status(400).send({
+            return res.status(400).send({
                 success: false,
                 message: `Tickets is not present!`
             });

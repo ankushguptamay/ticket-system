@@ -2,7 +2,7 @@ const express = require("express");
 const employee = express.Router();
 
 const { getMember, changePassword } = require('../Controllers/OrganizationMember/organizationMemberController');
-const { createTicket, myTicketForEmployee } = require('../Controllers/Ticket/ticketController');
+const { createTicket, myTicketForEmployee, getTicketById } = require('../Controllers/Ticket/ticketController');
 
 //middleware
 const { verifyOrganizationMemberToken } = require('../Middlewares/verifyJWT');
@@ -14,5 +14,6 @@ employee.get("/employee", verifyOrganizationMemberToken, isEmployeePresent, getM
 
 employee.post("/createTicket", verifyOrganizationMemberToken, isEmployeePresent, uploadAttachment.array("attachment", 10), createTicket);
 employee.get("/myTickets", verifyOrganizationMemberToken, isEmployeePresent, myTicketForEmployee);
+employee.get("/myTickets/:id", verifyOrganizationMemberToken, isEmployeePresent, getTicketById);
 
 module.exports = employee;
