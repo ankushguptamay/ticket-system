@@ -3,7 +3,7 @@ const storeKeeper = express.Router();
 
 const { getMember, changePassword } = require('../Controllers/OrganizationMember/organizationMemberController');
 const { createAssetByStoreKeeper, getAllAsset, updateAsset } = require('../Controllers/Asset/assetController');
-const { getAssetCategory } = require('../Controllers/Asset/assetcategoryController');
+const { getAssetCategory, createAssetCategory } = require('../Controllers/Asset/assetcategoryController');
 
 //middleware
 const { verifyOrganizationMemberToken } = require('../Middlewares/verifyJWT');
@@ -18,6 +18,7 @@ storeKeeper.get("/assets", verifyOrganizationMemberToken, isStoreKeeperPresent, 
 storeKeeper.put("/updateAsset/:id", verifyOrganizationMemberToken, isStoreKeeperPresent, updateAsset);
 
 // Asset Category
+storeKeeper.post("/createAssetCategory", verifyOrganizationMemberToken, isStoreKeeperPresent, createAssetCategory);
 storeKeeper.get("/assetCategories", verifyOrganizationMemberToken, isStoreKeeperPresent, getAssetCategory);
 
 module.exports = storeKeeper;

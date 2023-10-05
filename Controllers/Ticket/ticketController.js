@@ -20,11 +20,14 @@ exports.createTicket = async (req, res) => {
             return res.status(400).send(error.details[0].message);
         }
         // Generating ticket number
+        const { ticketCategory, subject, details } = req.body;
+        // 1.Today Date
         const date = JSON.stringify(new Date((new Date).getTime() - (24 * 60 * 60 * 1000)));
+        const today = `${date.slice(1, 12)}18:30:00.000Z`;
+        // 2.Today Day
         const Day = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
         const dayNumber = (new Date).getDay();
-        const today = `${date.slice(1, 12)}18:30:00.000Z`;
-        const { ticketCategory, subject, details } = req.body;
+        // Get All Today Ticket
         let number;
         const tickets = await Ticket.findAll({
             where: {
@@ -85,8 +88,6 @@ exports.createTicket = async (req, res) => {
                 iTTechnicianId: technician[0].id
             });
         } else {
-            const date = JSON.stringify(new Date((new Date).getTime() - (24 * 60 * 60 * 1000)));
-            const today = `${date.slice(1, 12)}18:30:00.000Z`;
             const todaysTotalTicket = await Ticket.count({
                 where: {
                     createdAt: { [Op.gte]: today }
@@ -371,7 +372,15 @@ exports.getTicketById = async (req, res) => {
         const ticket = await Ticket.findOne({
             where: {
                 id: req.params.id
-            }
+            },
+            include: [{
+                model: TicketAttachment,
+                as: "attachment"
+            }, {
+                model: OrganizationMember,
+                as: "employee",
+                attributes: ["id", "name", "department"]
+            }],
         });
         if (!ticket) {
             return res.status(400).send({

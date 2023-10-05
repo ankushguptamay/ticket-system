@@ -32,7 +32,7 @@ exports.createAssetCategory = async (req, res) => {
         const day = new Date().toISOString().slice(8, 10);
         const year = new Date().toISOString().slice(2, 4);
         const month = new Date().toISOString().slice(5, 7);
-        if (asset.length == 0) {
+        if (assetCategories.length == 0) {
             number = day + month + year + 'ASSCAT' + 1000;
         } else {
             let lastCategory = assetCategories[assetCategories.length - 1];
