@@ -140,6 +140,7 @@ exports.getMember = async (req, res) => {
     }
 }
 
+// For Admin
 exports.getAllMember = async (req, res) => {
     try {
         const { page, recordLimit, search } = req.query;
@@ -193,6 +194,67 @@ exports.getAllMember = async (req, res) => {
             totalPage: Math.ceil(totalMember / limit),
             currentPage: currentPage,
             data: member
+        });
+
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+}
+
+// For Technician
+exports.getAllEmployee = async (req, res) => {
+    try {
+        const { page, recordLimit, search } = req.query;
+        // Pagination
+        const limit = parseInt(recordLimit) || 5;
+        let offSet = 0;
+        let currentPage = 1;
+        if (page) {
+            offSet = (parseInt(page) - 1) * limit;
+            currentPage = parseInt(page);
+        }
+        const condition = [
+            { post: "EMPLOYEE" }
+        ];
+        // Include Search
+        if (search) {
+            condition.push({
+                [Op.or]: [
+                    { name: { [Op.substring]: search } },
+                    { attendanceId: search }
+                ]
+            })
+        }
+        // Count Total Member
+        const totalEmployee = await OrganizationMember.count({
+            where: {
+                [Op.and]: condition
+            }
+        });
+        // Get all member
+        const employee = await OrganizationMember.findAll({
+            limit: limit,
+            offset: offSet,
+            order: [
+                ["createdAt", "ASC"]
+            ],
+            where: {
+                [Op.and]: condition
+            },
+            attributes: {
+                exclude: ['password', 'email', 'mobileNumber']
+            }
+        });
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `Employee Fetched successfully!`,
+            totalPage: Math.ceil(totalEmployee / limit),
+            currentPage: currentPage,
+            data: employee
         });
 
     } catch (err) {
