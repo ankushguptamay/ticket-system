@@ -89,7 +89,7 @@ exports.assignAsset = (data) => {
         itemName: joi.string().required(),
         assetCategory: joi.string().required(),
         date: joi.string().required(),
-        employeeId: joi.string().required()
+        employeeAttendanceId: joi.string().required()
     });
     return schema.validate(data);
 }

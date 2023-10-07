@@ -220,7 +220,19 @@ exports.assignAssetToEmployeeByTechnician = async (req, res) => {
             return res.status(400).send(error.details[0].message);
         }
         // FindAsset
-        const { itemName, assetCategory, quantity, date, status, employeeId } = req.body;
+        const { itemName, assetCategory, quantity, date, status, employeeAttendanceId } = req.body;
+        const employee = await OrganizationMember.findOne({
+            where: {
+                attendanceId: employeeAttendanceId,
+                post: "EMPLOYEE"
+            }
+        });
+        if (!employee) {
+            return res.status(400).send({
+                success: false,
+                message: `Employee(${employeeAttendanceId}) is not present!`
+            });
+        }
         const asset = await Asset.findOne({
             where: {
                 itemName: itemName
@@ -246,7 +258,7 @@ exports.assignAssetToEmployeeByTechnician = async (req, res) => {
             status: status.toUpperCase(),
             date: date,
             quantity: quantity,
-            employeeId: employeeId,
+            employeeId: employee.id,
             assetId: asset.id
         });
         // Update Asset Quantity
