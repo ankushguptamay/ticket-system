@@ -34,6 +34,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         attendanceId: {
             type: DataTypes.STRING
+        },
+        qrImage: {
+            type: DataTypes.TEXT("long")
         }
     }, {
         paranoid: true

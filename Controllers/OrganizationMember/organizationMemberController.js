@@ -5,6 +5,7 @@ const { JWT_SECRET_KEY, JWT_VALIDITY } = process.env;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { Op } = require("sequelize");
+const QRCode = require("qrcode");
 const SALT = 10;
 
 // register
@@ -22,8 +23,11 @@ exports.registerMember = async (req, res) => {
         // If Email is already present
         const isMember = await OrganizationMember.findOne({
             where: {
-                email: req.body.email,
-            }
+                [Op.or]: [
+                    { attendanceId: req.body.attendanceId }, { email: req.body.email }
+                ]
+            },
+            paranoid: false
         });
         if (isMember) {
             return res.status(400).send({
@@ -34,13 +38,17 @@ exports.registerMember = async (req, res) => {
         // Hash password
         const salt = await bcrypt.genSalt(SALT);
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        // Create qrCode
+        const qrImage = await QRCode.toDataURL(req.body.attendanceId);
         // Create database
         const Post = (req.body.post).toUpperCase();
         await OrganizationMember.create({
             ...req.body,
             password: hashedPassword,
-            post: Post
+            post: Post,
+            qrImage: qrImage
         });
+        // Save qrCode
         // Send final success response
         res.status(200).send({
             success: true,

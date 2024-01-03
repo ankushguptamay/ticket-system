@@ -283,7 +283,7 @@ exports.assignAssetToEmployeeByTechnician = async (req, res) => {
 // Not pagination
 exports.getAllAssetAssignTOEmployee = async (req, res) => {
     try {
-        const employee = await OrganizationMember.findAll({
+        const employee = await OrganizationMember.findOne({
             where: {
                 id: req.params.id
             },

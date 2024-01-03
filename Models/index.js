@@ -1,6 +1,6 @@
 const dbConfig = require('../Config/db.config.js');
 
-const Sequelize = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize(dbConfig.database, dbConfig.user, dbConfig.password, {
     host: dbConfig.host,
     dialect: dbConfig.dialect,
@@ -13,6 +13,8 @@ const sequelize = new Sequelize(dbConfig.database, dbConfig.user, dbConfig.passw
 });
 
 const db = {};
+
+const queryInterface = sequelize.getQueryInterface();
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
@@ -47,5 +49,7 @@ db.employeeAsset.belongsTo(db.asset, { foreignKey: 'assetId', as: 'asset' });
 // Association bt employee and junction table employeeAsset
 db.organizationMember.hasMany(db.employeeAsset, { foreignKey: 'employeeId', as: 'emplyee_asset_association' });
 db.employeeAsset.belongsTo(db.organizationMember, { foreignKey: 'employeeId', as: 'employee' });
+
+queryInterface.addColumn("organizationMembers", "qrImage", { type: DataTypes.TEXT('long') }).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
 
 module.exports = db;
