@@ -50,6 +50,6 @@ db.employeeAsset.belongsTo(db.asset, { foreignKey: 'assetId', as: 'asset' });
 db.organizationMember.hasMany(db.employeeAsset, { foreignKey: 'employeeId', as: 'emplyee_asset_association' });
 db.employeeAsset.belongsTo(db.organizationMember, { foreignKey: 'employeeId', as: 'employee' });
 
-queryInterface.addColumn("organizationMembers", "qrImage", { type: DataTypes.TEXT('long') }).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
+// queryInterface.addColumn("organizationMembers", "qrImage", { type: DataTypes.TEXT('long') }).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
 
 module.exports = db;
