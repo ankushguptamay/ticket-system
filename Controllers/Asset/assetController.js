@@ -230,7 +230,7 @@ exports.assignAssetToEmployeeByTechnician = async (req, res) => {
         if (!employee) {
             return res.status(400).send({
                 success: false,
-                message: `Employee(${employeeAttendanceId}) is not present!`
+                message: `Employee (${employeeAttendanceId}) is not present!`
             });
         }
         const asset = await Asset.findOne({
@@ -241,7 +241,7 @@ exports.assignAssetToEmployeeByTechnician = async (req, res) => {
         if (!asset) {
             return res.status(400).send({
                 success: false,
-                message: `This asset is not present!`
+                message: `This asset is not present or 0!`
             });
         }
         // Check Asset quantity

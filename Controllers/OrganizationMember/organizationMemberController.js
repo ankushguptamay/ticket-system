@@ -1,5 +1,6 @@
 const db = require('../../Models');
 const OrganizationMember = db.organizationMember;
+const EmployeeAsset = db.employeeAsset;
 const { login, memberRegistration, changePassword } = require("../../Middlewares/validate");
 const { JWT_SECRET_KEY, JWT_VALIDITY } = process.env;
 const jwt = require("jsonwebtoken");
@@ -39,7 +40,9 @@ exports.registerMember = async (req, res) => {
         const salt = await bcrypt.genSalt(SALT);
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
         // Create qrCode
-        const qrImage = await QRCode.toDataURL(req.body.attendanceId);
+        // const data = `${req.body.attendanceId}`;
+        const string = JSON.stringify(req.body.attendanceId);
+        const qrImage = await QRCode.toDataURL(string);
         // Create database
         const Post = (req.body.post).toUpperCase();
         await OrganizationMember.create({
@@ -265,6 +268,39 @@ exports.getAllEmployee = async (req, res) => {
             data: employee
         });
 
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+}
+
+exports.getMemberByQRCode = async (req, res) => {
+    try {
+        const attendanceId = req.body.attendanceId;
+        const member = await OrganizationMember.findOne({
+            where: {
+                attendanceId: attendanceId
+            },
+            attributes: { exclude: ['password'] },
+            include: [{
+                model: EmployeeAsset,
+                as: "emplyee_asset_association"
+            }]
+        });
+        if (!member) {
+            return res.status(400).send({
+                success: false,
+                message: "Employee is not present!"
+            });
+        }
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `${member.post} profile fetched successfully!`,
+            data: member
+        });
     } catch (err) {
         res.status(500).send({
             success: false,

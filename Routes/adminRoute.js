@@ -2,7 +2,7 @@ const express = require("express");
 const admin = express.Router();
 
 const { register, getAdmin, changePassword } = require('../Controllers/Admin/adminController');
-const { registerMember, getAllMember } = require('../Controllers/OrganizationMember/organizationMemberController');
+const { registerMember, getAllMember, getMemberByQRCode } = require('../Controllers/OrganizationMember/organizationMemberController');
 const { ticketForAdmin, getTicketById } = require('../Controllers/Ticket/ticketController');
 const { createAssetCategory, getAssetCategory, deleteAssetCategory } = require('../Controllers/Asset/assetcategoryController');
 const { getAllAsset, getAllAssetAssignTOEmployee } = require('../Controllers/Asset/assetController');
@@ -18,6 +18,7 @@ admin.get("/admin", verifyOrganizationMemberToken, isAdminPresent, getAdmin);
 // Organization Member
 admin.post("/registerMember", verifyOrganizationMemberToken, isAdminPresent, registerMember);
 admin.get("/employees", verifyOrganizationMemberToken, isAdminPresent, getAllMember);
+admin.post("/memberByQRCode", verifyOrganizationMemberToken, isAdminPresent, getMemberByQRCode);
 
 // Ticket
 admin.get("/tickets", verifyOrganizationMemberToken, isAdminPresent, ticketForAdmin);
