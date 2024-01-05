@@ -221,63 +221,64 @@ exports.assignAssetToEmployeeByTechnician = async (req, res) => {
         }
         // FindAsset
         const { itemName, assetCategory, quantity, date, status, employeeAttendanceId } = req.body;
-        if (status.toUpperCase() !== "WORKING" || status.toUpperCase() !== "NON WORKING") {
-            return res.status(400).send({
+        if (status.toUpperCase() === "WORKING" || status.toUpperCase() === "NON WORKING") {
+            const employee = await OrganizationMember.findOne({
+                where: {
+                    attendanceId: employeeAttendanceId,
+                    post: "EMPLOYEE"
+                }
+            });
+            if (!employee) {
+                return res.status(400).send({
+                    success: false,
+                    message: `Employee (${employeeAttendanceId}) is not present!`
+                });
+            }
+            const asset = await Asset.findOne({
+                where: {
+                    itemName: itemName
+                }
+            });
+            if (!asset) {
+                return res.status(400).send({
+                    success: false,
+                    message: `This asset is not present or 0!`
+                });
+            }
+            // Check Asset quantity
+            if (parseInt(asset.quantity) < parseInt(quantity)) {
+                return res.status(400).send({
+                    success: false,
+                    message: `This asset's quantity is ${asset.quantity}. You can not assign more then ${asset.quantity}.`
+                });
+            }
+            // Assign To Employee
+            await EmployeeAsset.create({
+                itemName: itemName,
+                assetCategory: assetCategory,
+                status: status.toUpperCase(),
+                date: date,
+                quantity: quantity,
+                employeeId: employee.id,
+                assetId: asset.id
+            });
+            // Update Asset Quantity
+            const newQuantity = parseInt(asset.quantity) - parseInt(quantity);
+            await asset.update({
+                ...asset,
+                quantity: newQuantity
+            });
+            // Send final success response
+            res.status(200).send({
+                success: true,
+                message: `Asset assign to employee successfully!`
+            });
+        } else {
+            res.status(400).send({
                 success: false,
                 message: `Status should be Working or Non Working!`
             });
         }
-        const employee = await OrganizationMember.findOne({
-            where: {
-                attendanceId: employeeAttendanceId,
-                post: "EMPLOYEE"
-            }
-        });
-        if (!employee) {
-            return res.status(400).send({
-                success: false,
-                message: `Employee (${employeeAttendanceId}) is not present!`
-            });
-        }
-        const asset = await Asset.findOne({
-            where: {
-                itemName: itemName
-            }
-        });
-        if (!asset) {
-            return res.status(400).send({
-                success: false,
-                message: `This asset is not present or 0!`
-            });
-        }
-        // Check Asset quantity
-        if (parseInt(asset.quantity) < parseInt(quantity)) {
-            return res.status(400).send({
-                success: false,
-                message: `This asset's quantity is ${asset.quantity}. You can not assign more then ${asset.quantity}.`
-            });
-        }
-        // Assign To Employee
-        await EmployeeAsset.create({
-            itemName: itemName,
-            assetCategory: assetCategory,
-            status: status.toUpperCase(),
-            date: date,
-            quantity: quantity,
-            employeeId: employee.id,
-            assetId: asset.id
-        });
-        // Update Asset Quantity
-        const newQuantity = parseInt(asset.quantity) - parseInt(quantity);
-        await asset.update({
-            ...asset,
-            quantity: newQuantity
-        });
-        // Send final success response
-        res.status(200).send({
-            success: true,
-            message: `Asset assign to employee successfully!`
-        });
     } catch (err) {
         res.status(500).send({
             success: false,
