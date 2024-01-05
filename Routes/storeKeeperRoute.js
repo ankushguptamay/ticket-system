@@ -2,7 +2,7 @@ const express = require("express");
 const storeKeeper = express.Router();
 
 const { getMember, changePassword } = require('../Controllers/OrganizationMember/organizationMemberController');
-const { createAssetByStoreKeeper, getAllAsset, updateAsset } = require('../Controllers/Asset/assetController');
+const { createAssetByStoreKeeper, getAllAsset, updateAsset, getAssetById } = require('../Controllers/Asset/assetController');
 const { getAssetCategory, createAssetCategory } = require('../Controllers/Asset/assetcategoryController');
 
 //middleware
@@ -15,6 +15,7 @@ storeKeeper.get("/storeKeeper", verifyOrganizationMemberToken, isStoreKeeperPres
 // Asset
 storeKeeper.post("/createAsset", verifyOrganizationMemberToken, isStoreKeeperPresent, createAssetByStoreKeeper);
 storeKeeper.get("/assets", verifyOrganizationMemberToken, isStoreKeeperPresent, getAllAsset);
+storeKeeper.get("/assets/:id", verifyOrganizationMemberToken, isStoreKeeperPresent, getAssetById);
 storeKeeper.put("/updateAsset/:id", verifyOrganizationMemberToken, isStoreKeeperPresent, updateAsset);
 
 // Asset Category

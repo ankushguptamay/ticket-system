@@ -312,3 +312,30 @@ exports.getAllAssetAssignTOEmployee = async (req, res) => {
         });
     }
 };
+
+exports.getAssetById = async (req, res) => {
+    try {
+        const asset = await Asset.findOne({
+            where: {
+                id: req.params.id
+            }
+        });
+        if (!asset) {
+            return res.status(400).send({
+                success: false,
+                message: `Asset is not present!`
+            });
+        }
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `Asset fetched successfully!`,
+            data: asset
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+};
