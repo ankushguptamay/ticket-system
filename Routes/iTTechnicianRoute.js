@@ -4,6 +4,7 @@ const iTechnician = express.Router();
 const { getMember, changePassword, getAllEmployee } = require('../Controllers/OrganizationMember/organizationMemberController');
 const { myTicketForITTechnician, updateTicketByTechnician, getTicketById } = require('../Controllers/Ticket/ticketController');
 const { getAllAssetForITTechnician, assignAssetToEmployeeByTechnician } = require('../Controllers/Asset/assetController');
+const { getAssetCategory } = require('../Controllers/Asset/assetcategoryController');
 
 //middleware
 const { verifyOrganizationMemberToken } = require('../Middlewares/verifyJWT');
@@ -23,5 +24,6 @@ iTechnician.put("/updateTicket/:id", verifyOrganizationMemberToken, isITTechnici
 // Asset
 iTechnician.get("/assets", verifyOrganizationMemberToken, isITTechnicianPresent, getAllAssetForITTechnician);
 iTechnician.post("/assignAsset", verifyOrganizationMemberToken, isITTechnicianPresent, assignAssetToEmployeeByTechnician);
+iTechnician.get("/assetCategories", verifyOrganizationMemberToken, isITTechnicianPresent, getAssetCategory);
 
 module.exports = iTechnician;
