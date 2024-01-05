@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         status:{
             type:DataTypes.STRING,
             validate: {
-                isIn: [['Working', 'NON WORKING']]
+                isIn: [['WORKING', 'NON WORKING']]
             }
         }
     })

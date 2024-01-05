@@ -221,6 +221,12 @@ exports.assignAssetToEmployeeByTechnician = async (req, res) => {
         }
         // FindAsset
         const { itemName, assetCategory, quantity, date, status, employeeAttendanceId } = req.body;
+        if (status.toUpperCase() !== "WORKING" || status.toUpperCase() !== "NON WORKING") {
+            return res.status(400).send({
+                success: false,
+                message: `Status should be Working or Non Working!`
+            });
+        }
         const employee = await OrganizationMember.findOne({
             where: {
                 attendanceId: employeeAttendanceId,
