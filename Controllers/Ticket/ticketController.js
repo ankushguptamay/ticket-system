@@ -325,7 +325,6 @@ exports.ticketForAdmin = async (req, res) => {
 exports.updateTicketByTechnician = async (req, res) => {
     try {
         const { status, subject, ticketCategory, reply } = req.body;
-        console.log(req.body);
         const assign = await ITTechnicians_Ticket.findOne({
             ticketId: req.params.id,
             iTTechnicianId: req.organizationMember.id
@@ -393,6 +392,40 @@ exports.getTicketById = async (req, res) => {
             success: true,
             message: `Ticket fetched successfully!`,
             data: ticket
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+};
+
+exports.updateTicketByAdmin = async (req, res) => {
+    try {
+        const { status, subject, ticketCategory, reply } = req.body;
+        const ticket = await Ticket.findOne({
+            where: {
+                id: req.params.id
+            }
+        });
+        if (!ticket) {
+            return res.status(400).send({
+                success: false,
+                message: `Tickets is not present!`
+            });
+        }
+        await ticket.update({
+            ...ticket,
+            status: status,
+            subject: subject,
+            ticketCategory: ticketCategory,
+            reply: reply
+        });
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `Tickets updated successfully!`
         });
     } catch (err) {
         res.status(500).send({

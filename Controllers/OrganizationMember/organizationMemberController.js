@@ -1,7 +1,7 @@
 const db = require('../../Models');
 const OrganizationMember = db.organizationMember;
 const EmployeeAsset = db.employeeAsset;
-const { login, memberRegistration, changePassword } = require("../../Middlewares/validate");
+const { login, memberRegistration, changePassword, memberUpdationAdmin } = require("../../Middlewares/validate");
 const { JWT_SECRET_KEY, JWT_VALIDITY } = process.env;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -295,6 +295,48 @@ exports.getMemberByQRCode = async (req, res) => {
                 message: "Employee is not present!"
             });
         }
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `${member.post} profile fetched successfully!`,
+            data: member
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+}
+
+exports.updateEmployeeByAdmin = async (req, res) => {
+    try {
+        // Validate Body
+        const { error } = memberUpdationAdmin(req.body);
+        if (error) {
+            return res.status(400).send(error.details[0].message);
+        }
+        const member = await OrganizationMember.findOne({
+            where: {
+                id: req.params.id
+            }
+        });
+        if (!member) {
+            return res.status(400).send({
+                success: false,
+                message: "Employee is not present!"
+            });
+        }
+        const { name, email, mobileNumber, post, department, attendanceId } = req.body;
+        await member.update({
+            ...member,
+            name: name,
+            email: email,
+            mobileNumber: mobileNumber,
+            attendanceId: attendanceId,
+            post: post,
+            department: department
+        });
         // Send final success response
         res.status(200).send({
             success: true,

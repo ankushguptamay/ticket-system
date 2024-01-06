@@ -104,3 +104,47 @@ exports.deleteAssetCategory = async (req, res) => {
         });
     }
 };
+
+exports.updateAssetCategory = async (req, res) => {
+    try {
+        const assetCategory = await AssetCategory.findOne({
+            where: {
+                id: req.params.id
+            }
+        });
+        if (!assetCategory) {
+            return res.status(400).send({
+                success: false,
+                message: `Asset category is not present!`
+            });
+        }
+        const { categoryName } = req.body;
+        if (categoryName !== assetCategory.categoryName) {
+            const isPresent = await AssetCategory.findOne({
+                where: {
+                    categoryName: categoryName
+                }
+            });
+            if (isPresent) {
+                return res.status(400).send({
+                    success: false,
+                    message: `This asset category is already present!`
+                });
+            }
+        }
+        await assetCategory.update({
+            ...assetCategory,
+            categoryName: categoryName
+        });
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `Asset category deleted successfully!`
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+};

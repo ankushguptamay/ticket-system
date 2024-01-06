@@ -93,3 +93,15 @@ exports.assignAsset = (data) => {
     });
     return schema.validate(data);
 }
+
+exports.memberUpdationAdmin = (data) => {
+    const schema = joi.object().keys({
+        name: joi.string().min(3).max(30).required(),
+        email: joi.string().email().required().label('Email'),
+        mobileNumber: joi.string().length(10).pattern(/^[0-9]+$/).required(),
+        post: joi.string().required(),
+        department: joi.string().required(),
+        attendanceId: joi.string().required()
+    });
+    return schema.validate(data);
+}

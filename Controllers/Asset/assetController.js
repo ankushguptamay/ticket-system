@@ -131,7 +131,7 @@ exports.getAllAssetForITTechnician = async (req, res) => {
             currentPage = parseInt(page);
         }
         const condition = [{
-            assetCategory: "IT",
+            // assetCategory: "IT",
             quantity: { [Op.gt]: 0 }
         }];
         // Include search
