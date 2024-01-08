@@ -139,7 +139,7 @@ exports.updateAssetCategory = async (req, res) => {
         // Send final success response
         res.status(200).send({
             success: true,
-            message: `Asset category deleted successfully!`
+            message: `Asset category updated successfully!`
         });
     } catch (err) {
         res.status(500).send({

@@ -340,7 +340,7 @@ exports.updateEmployeeByAdmin = async (req, res) => {
         // Send final success response
         res.status(200).send({
             success: true,
-            message: `${member.post} profile fetched successfully!`,
+            message: `${member.post} profile updated successfully!`,
             data: member
         });
     } catch (err) {
