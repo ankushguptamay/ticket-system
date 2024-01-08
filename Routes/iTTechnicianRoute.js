@@ -5,6 +5,7 @@ const { getMember, changePassword, getAllEmployee } = require('../Controllers/Or
 const { myTicketForITTechnician, updateTicketByTechnician, getTicketById } = require('../Controllers/Ticket/ticketController');
 const { getAllAssetForITTechnician, assignAssetToEmployeeByTechnician } = require('../Controllers/Asset/assetController');
 const { getAssetCategory } = require('../Controllers/Asset/assetcategoryController');
+const { myClosedTicket, myOpenTicket, myTicketNumber } = require('../Controllers/OrganizationMember/itTechnicianDashboard');
 
 //middleware
 const { verifyOrganizationMemberToken } = require('../Middlewares/verifyJWT');
@@ -25,5 +26,10 @@ iTechnician.put("/updateTicket/:id", verifyOrganizationMemberToken, isITTechnici
 iTechnician.get("/assets", verifyOrganizationMemberToken, isITTechnicianPresent, getAllAssetForITTechnician);
 iTechnician.post("/assignAsset", verifyOrganizationMemberToken, isITTechnicianPresent, assignAssetToEmployeeByTechnician);
 iTechnician.get("/assetCategories", verifyOrganizationMemberToken, isITTechnicianPresent, getAssetCategory);
+
+// Dashboard
+iTechnician.get("/myTicketNumber", verifyOrganizationMemberToken, isITTechnicianPresent, myTicketNumber);
+iTechnician.get("/openTicket", verifyOrganizationMemberToken, isITTechnicianPresent, myOpenTicket);
+iTechnician.get("/closedTicket", verifyOrganizationMemberToken, isITTechnicianPresent, myClosedTicket);
 
 module.exports = iTechnician;
