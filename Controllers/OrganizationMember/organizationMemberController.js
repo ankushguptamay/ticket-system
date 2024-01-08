@@ -350,3 +350,25 @@ exports.updateEmployeeByAdmin = async (req, res) => {
         });
     }
 }
+
+exports.getMemberById = async (req, res) => {
+    try {
+        const member = await OrganizationMember.findOne({
+            where: {
+                id: req.params.id
+            },
+            attributes: { exclude: ['password'] }
+        });
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `${member.post} Profile Fetched successfully!`,
+            data: member
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+}

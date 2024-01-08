@@ -2,7 +2,7 @@ const express = require("express");
 const admin = express.Router();
 
 const { register, getAdmin, changePassword } = require('../Controllers/Admin/adminController');
-const { registerMember, getAllMember, getMemberByQRCode, updateEmployeeByAdmin } = require('../Controllers/OrganizationMember/organizationMemberController');
+const { registerMember, getAllMember, getMemberByQRCode, updateEmployeeByAdmin, getMemberById } = require('../Controllers/OrganizationMember/organizationMemberController');
 const { ticketForAdmin, getTicketById, updateTicketByAdmin } = require('../Controllers/Ticket/ticketController');
 const { createAssetCategory, getAssetCategory, deleteAssetCategory, updateAssetCategory } = require('../Controllers/Asset/assetcategoryController');
 const { getAllAsset, getAllAssetAssignTOEmployee, getAssetById, updateAsset } = require('../Controllers/Asset/assetController');
@@ -18,6 +18,7 @@ admin.get("/admin", verifyOrganizationMemberToken, isAdminPresent, getAdmin);
 // Organization Member
 admin.post("/registerMember", verifyOrganizationMemberToken, isAdminPresent, registerMember);
 admin.get("/employees", verifyOrganizationMemberToken, isAdminPresent, getAllMember);
+admin.get("/employees/:id", verifyOrganizationMemberToken, isAdminPresent, getMemberById);
 admin.get("/memberByQRCode", verifyOrganizationMemberToken, isAdminPresent, getMemberByQRCode);
 admin.put("/updateEmployee/:id", verifyOrganizationMemberToken, isAdminPresent, updateEmployeeByAdmin);
 

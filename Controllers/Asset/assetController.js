@@ -347,7 +347,7 @@ exports.getAssetById = async (req, res) => {
     }
 };
 
-exports.getAssignedAssetForEmployee = async (req, res) => {
+exports.getAssignedAsset = async (req, res) => {
     try {
         const asset = await EmployeeAsset.findAll({
             where: {

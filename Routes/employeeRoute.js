@@ -3,7 +3,7 @@ const employee = express.Router();
 
 const { getMember, changePassword } = require('../Controllers/OrganizationMember/organizationMemberController');
 const { createTicket, myTicketForEmployee, getTicketById } = require('../Controllers/Ticket/ticketController');
-const { getAssignedAssetForEmployee } = require("../Controllers/Asset/assetController")
+const { getAssignedAsset } = require('../Controllers/Asset/assetController');
 
 //middleware
 const { verifyOrganizationMemberToken } = require('../Middlewares/verifyJWT');
@@ -17,6 +17,6 @@ employee.post("/createTicket", verifyOrganizationMemberToken, isEmployeePresent,
 employee.get("/myTickets", verifyOrganizationMemberToken, isEmployeePresent, myTicketForEmployee);
 employee.get("/myTickets/:id", verifyOrganizationMemberToken, isEmployeePresent, getTicketById);
 
-employee.get("/myAssets", verifyOrganizationMemberToken, isEmployeePresent, getAssignedAssetForEmployee);
+// employee.get("/myAssets", verifyOrganizationMemberToken, isEmployeePresent, getAssignedAsset);
 
 module.exports = employee;
