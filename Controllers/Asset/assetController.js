@@ -346,3 +346,34 @@ exports.getAssetById = async (req, res) => {
         });
     }
 };
+
+exports.getAssignedAssetForEmployee = async (req, res) => {
+    try {
+        const asset = await EmployeeAsset.findAll({
+            where: {
+                employeeId: req.organizationMember.id
+            },
+            include: [{
+                model: Asset,
+                as: "asset",
+                attributes: {
+                    exclude: ['quantity']
+                }
+            }],
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        });
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `All assigned asset to employee fetched successfully!`,
+            data: asset
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+};
