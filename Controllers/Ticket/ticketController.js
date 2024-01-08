@@ -5,6 +5,9 @@ const OrganizationMember = db.organizationMember;
 const ITTechnicians_Ticket = db.iTTechnicians_Ticket;
 const { createAttachment } = require("../../Middlewares/validate");
 const { Op } = require('sequelize');
+const fs = require('fs');
+const { s3UploadObject, s3DeleteObject } = require("../../Util/fileToS3");
+const { deleteSingleFile } = require("../../Util/deleteFile");
 
 exports.createTicket = async (req, res) => {
     try {
@@ -58,11 +61,16 @@ exports.createTicket = async (req, res) => {
         });
         // Create attachment
         for (let i = 0; i < req.files.length; i++) {
+            const imagePath = `./Resource/${(req.files)[i].filename}`
+            const fileContent = fs.readFileSync(imagePath);
+            const response = await s3UploadObject((req.files[i]).filename, fileContent);
+            deleteSingleFile(req.files[i].path);
+            const fileAWSPath = response.Location;
             await TicketAttachment.create({
                 ticketId: ticket.id,
                 attachment_FileName: req.files[i].filename,
                 attachment_OriginalName: req.files[i].originalname,
-                attachment_Path: req.files[i].path,
+                attachment_Path: fileAWSPath,
                 attachment_MimeType: req.files[i].mimetype
             });
         }
@@ -434,3 +442,16 @@ exports.updateTicketByAdmin = async (req, res) => {
         });
     }
 };
+
+// const params = {
+//     Bucket: BUCKET_NAME,
+//     Key: '1704641596618-Screenshot from 2024-01-05 18-57-24.png' // File name you want to save as in S3
+// };
+// s3.deleteObject(params, function (err, data) {
+//     if (err) {
+//         console.log(err);
+//     } else {
+//          console.log("Successfully deleted data to bucket");
+//         console.log(data);
+//     }
+// });

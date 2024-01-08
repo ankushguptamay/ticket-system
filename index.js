@@ -28,8 +28,6 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/attachment', express.static('./Resource/Attachment'));
-
 app.use("/api/admin", admin);
 app.use("/api/employee", employee);
 app.use("/api/iTTechnician", technician);

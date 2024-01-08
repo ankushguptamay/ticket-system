@@ -14,7 +14,7 @@ const filter = (req, file, cb) => {
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
         if (file.fieldname === "attachment") {
-            cb(null, path.join(`${__dirname}/../Resource/Attachment`));
+            cb(null, path.join(`${__dirname}/../Resource`));
         }
     },
     filename: (req, file, callback) => {

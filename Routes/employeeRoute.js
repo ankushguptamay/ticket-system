@@ -12,7 +12,7 @@ const { uploadAttachment } = require("../Middlewares/uploadAttachment");
 employee.post("/changePassword", verifyOrganizationMemberToken, isEmployeePresent, changePassword);
 employee.get("/employee", verifyOrganizationMemberToken, isEmployeePresent, getMember);
 
-employee.post("/createTicket", verifyOrganizationMemberToken, isEmployeePresent, uploadAttachment.array("attachment", 10), createTicket);
+employee.post("/createTicket",  uploadAttachment.array("attachment", 10), createTicket);
 employee.get("/myTickets", verifyOrganizationMemberToken, isEmployeePresent, myTicketForEmployee);
 employee.get("/myTickets/:id", verifyOrganizationMemberToken, isEmployeePresent, getTicketById);
 
