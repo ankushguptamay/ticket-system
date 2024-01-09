@@ -1,7 +1,7 @@
 const express = require("express");
 const storeKeeper = express.Router();
 
-const { getMember, changePassword } = require('../Controllers/OrganizationMember/organizationMemberController');
+const { getMember, changePassword, updateMember } = require('../Controllers/OrganizationMember/organizationMemberController');
 const { createAssetByStoreKeeper, getAllAsset, updateAsset, getAssetById } = require('../Controllers/Asset/assetController');
 const { getAssetCategory, createAssetCategory } = require('../Controllers/Asset/assetcategoryController');
 
@@ -11,6 +11,7 @@ const { isStoreKeeperPresent } = require('../Middlewares/isPresent');
 
 storeKeeper.post("/changePassword", verifyOrganizationMemberToken, isStoreKeeperPresent, changePassword);
 storeKeeper.get("/storeKeeper", verifyOrganizationMemberToken, isStoreKeeperPresent, getMember);
+storeKeeper.put("/update", verifyOrganizationMemberToken, isStoreKeeperPresent, updateMember);
 
 // Asset
 storeKeeper.post("/createAsset", verifyOrganizationMemberToken, isStoreKeeperPresent, createAssetByStoreKeeper);

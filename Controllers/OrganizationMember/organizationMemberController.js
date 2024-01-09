@@ -1,7 +1,7 @@
 const db = require('../../Models');
 const OrganizationMember = db.organizationMember;
 const EmployeeAsset = db.employeeAsset;
-const { login, memberRegistration, changePassword, memberUpdationAdmin } = require("../../Middlewares/validate");
+const { login, memberRegistration, changePassword, memberUpdationAdmin, memberUpdation } = require("../../Middlewares/validate");
 const { JWT_SECRET_KEY, JWT_VALIDITY } = process.env;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -363,6 +363,36 @@ exports.getMemberById = async (req, res) => {
         res.status(200).send({
             success: true,
             message: `${member.post} Profile Fetched successfully!`,
+            data: member
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+}
+
+exports.updateMember = async (req, res) => {
+    try {
+        // Validate Body
+        const { error } = memberUpdation(req.body);
+        if (error) {
+            return res.status(400).send(error.details[0].message);
+        }
+        // Update
+        const { name } = req.body;
+        await OrganizationMember.update({
+            name: name
+        }, {
+            where: {
+                id: req.organizationMember.id
+            }
+        });
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `Profile name updated successfully!`,
             data: member
         });
     } catch (err) {

@@ -1,7 +1,7 @@
 const express = require("express");
 const iTechnician = express.Router();
 
-const { getMember, changePassword, getAllEmployee } = require('../Controllers/OrganizationMember/organizationMemberController');
+const { getMember, changePassword, getAllEmployee, updateMember } = require('../Controllers/OrganizationMember/organizationMemberController');
 const { myTicketForITTechnician, updateTicketByTechnician, getTicketById } = require('../Controllers/Ticket/ticketController');
 const { getAllAssetForITTechnician, assignAssetToEmployeeByTechnician } = require('../Controllers/Asset/assetController');
 const { getAssetCategory } = require('../Controllers/Asset/assetcategoryController');
@@ -13,6 +13,7 @@ const { isITTechnicianPresent } = require('../Middlewares/isPresent');
 
 iTechnician.post("/changePassword", verifyOrganizationMemberToken, isITTechnicianPresent, changePassword);
 iTechnician.get("/iTechnician", verifyOrganizationMemberToken, isITTechnicianPresent, getMember);
+iTechnician.put("/update", verifyOrganizationMemberToken, isITTechnicianPresent, updateMember);
 
 // Employee
 iTechnician.get("/employees", verifyOrganizationMemberToken, isITTechnicianPresent, getAllEmployee);

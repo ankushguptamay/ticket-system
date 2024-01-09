@@ -6,6 +6,7 @@ const { registerMember, getAllMember, getMemberByQRCode, updateEmployeeByAdmin, 
 const { ticketForAdmin, getTicketById, updateTicketByAdmin } = require('../Controllers/Ticket/ticketController');
 const { createAssetCategory, getAssetCategory, deleteAssetCategory, updateAssetCategory } = require('../Controllers/Asset/assetcategoryController');
 const { getAllAsset, getAllAssetAssignTOEmployee, getAssetById, updateAsset } = require('../Controllers/Asset/assetController');
+const { totalAsset, totalCategory, totalEmployee, totalMember } = require('../Controllers/Admin/adminDashboard');
 
 //middleware
 const { verifyOrganizationMemberToken } = require('../Middlewares/verifyJWT');
@@ -38,5 +39,11 @@ admin.get("/assets", verifyOrganizationMemberToken, isAdminPresent, getAllAsset)
 admin.get("/assets/:id", verifyOrganizationMemberToken, isAdminPresent, getAssetById);
 admin.get("/assetToEmployee/:id", verifyOrganizationMemberToken, isAdminPresent, getAllAssetAssignTOEmployee);
 admin.put("/updateAsset/:id", verifyOrganizationMemberToken, isAdminPresent, updateAsset);
+
+// Dashboard
+admin.get("/totalAsset", verifyOrganizationMemberToken, isAdminPresent, totalAsset);
+admin.get("/totalCategory", verifyOrganizationMemberToken, isAdminPresent, totalCategory);
+admin.get("/totalEmployee", verifyOrganizationMemberToken, isAdminPresent, totalEmployee);
+admin.get("/totalMember", verifyOrganizationMemberToken, isAdminPresent, totalMember);
 
 module.exports = admin;

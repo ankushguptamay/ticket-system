@@ -105,3 +105,10 @@ exports.memberUpdationAdmin = (data) => {
     });
     return schema.validate(data);
 }
+
+exports.memberUpdation = (data) => {
+    const schema = joi.object().keys({
+        name: joi.string().min(3).max(30).required()
+    });
+    return schema.validate(data);
+}
