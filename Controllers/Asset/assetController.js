@@ -193,6 +193,9 @@ exports.updateAsset = async (req, res) => {
                 message: `Asset is not present!`
             });
         }
+        if (itemName !== asset.itemName) {
+            await EmployeeAsset.update({ itemName: itemName }, { where: { assetId: asset.id } });
+        }
         await asset.update({
             ...asset,
             itemName: itemName,
@@ -346,35 +349,3 @@ exports.getAssetById = async (req, res) => {
         });
     }
 };
-
-// Not pagination
-// exports.getMyAllAsset = async (req, res) => {
-//     try {
-//         const asset = await EmployeeAsset.findAll({
-//             where: {
-//                 employeeId: req.organizationMember.id
-//             },
-//             include: [{
-//                 model: Asset,
-//                 as: "asset",
-//                 attributes: {
-//                     exclude: ['quantity']
-//                 }
-//             }],
-//             order: [
-//                 ['createdAt', 'DESC']
-//             ]
-//         });
-//         // Send final success response
-//         res.status(200).send({
-//             success: true,
-//             message: `Asset fetched successfully!`,
-//             data: asset
-//         });
-//     } catch (err) {
-//         res.status(500).send({
-//             success: false,
-//             message: err.message
-//         });
-//     }
-// };

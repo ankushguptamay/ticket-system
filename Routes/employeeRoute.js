@@ -2,8 +2,8 @@ const express = require("express");
 const employee = express.Router();
 
 const { getMember, changePassword, updateMember, getMyAllAsset } = require('../Controllers/OrganizationMember/organizationMemberController');
-const { createTicket, myTicketForEmployee, getTicketById } = require('../Controllers/Ticket/ticketController');
-const { myAssetNumber, myClosedTicket, myOpenTicket } = require('../Controllers/OrganizationMember/employeeDashboard');
+const { createTicket, myTicketForEmployee, getTicketById, updateTicketByEmployee, deleteAttachmentFile } = require('../Controllers/Ticket/ticketController');
+const { myAssetNumber, myClosedTicket, myOpenTicket, totalAssetCategory } = require('../Controllers/OrganizationMember/employeeDashboard');
 
 //middleware
 const { verifyOrganizationMemberToken } = require('../Middlewares/verifyJWT');
@@ -17,11 +17,14 @@ employee.put("/update", verifyOrganizationMemberToken, isEmployeePresent, update
 employee.post("/createTicket", verifyOrganizationMemberToken, isEmployeePresent, uploadAttachment.array("attachment", 10), createTicket);
 employee.get("/myTickets", verifyOrganizationMemberToken, isEmployeePresent, myTicketForEmployee);
 employee.get("/myTickets/:id", verifyOrganizationMemberToken, isEmployeePresent, getTicketById);
+employee.put("/updateTicket/:id", verifyOrganizationMemberToken, isEmployeePresent, uploadAttachment.array("attachment", 10), updateTicketByEmployee);
+employee.delete("/deleteAttachment/:id", verifyOrganizationMemberToken, isEmployeePresent, deleteAttachmentFile);
 employee.get("/myAssets", verifyOrganizationMemberToken, isEmployeePresent, getMyAllAsset);
 
 // Dashboard
 employee.get("/myAssetNumber", verifyOrganizationMemberToken, isEmployeePresent, myAssetNumber);
 employee.get("/myClosedTicket", verifyOrganizationMemberToken, isEmployeePresent, myClosedTicket);
 employee.get("/myOpenTicket", verifyOrganizationMemberToken, isEmployeePresent, myOpenTicket);
+employee.get("/totalAssetCategory", verifyOrganizationMemberToken, isEmployeePresent, totalAssetCategory);
 
 module.exports = employee;

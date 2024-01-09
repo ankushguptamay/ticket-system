@@ -455,3 +455,81 @@ exports.updateTicketByAdmin = async (req, res) => {
 //         console.log(data);
 //     }
 // });
+
+exports.updateTicketByEmployee = async (req, res) => {
+    try {
+        const { subject, ticketCategory, reply } = req.body;
+        const ticket = await Ticket.findOne({
+            where: {
+                id: req.params.id,
+                createrId: req.organizationMember.id
+            }
+        });
+        if (!ticket) {
+            return res.status(400).send({
+                success: false,
+                message: `Tickets is not present!`
+            });
+        }
+        if (req.files.length > 0) {
+            for (let i = 0; i < req.files.length; i++) {
+                const imagePath = `./Resource/${(req.files)[i].filename}`
+                const fileContent = fs.readFileSync(imagePath);
+                const response = await s3UploadObject((req.files[i]).filename, fileContent);
+                deleteSingleFile(req.files[i].path);
+                const fileAWSPath = response.Location;
+                await TicketAttachment.create({
+                    ticketId: ticket.id,
+                    attachment_FileName: req.files[i].filename,
+                    attachment_OriginalName: req.files[i].originalname,
+                    attachment_Path: fileAWSPath,
+                    attachment_MimeType: req.files[i].mimetype
+                });
+            }
+        }
+        await ticket.update({
+            ...ticket,
+            subject: subject,
+            ticketCategory: ticketCategory,
+            reply: reply
+        });
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `Tickets updated successfully!`
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+};
+
+exports.deleteAttachmentFile = async (req, res) => {
+    try {
+        const ticketAttachment = await TicketAttachment.findOne({
+            where: {
+                id: req.params.id
+            }
+        });
+        if (!ticketAttachment) {
+            return res.status(400).send({
+                success: false,
+                message: `This file is not present!`
+            });
+        }
+        await s3DeleteObject(ticketAttachment.attachment_FileName);
+        await ticketAttachment.destroy();
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `File deleted successfully!`
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+};
