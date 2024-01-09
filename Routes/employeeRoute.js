@@ -1,9 +1,8 @@
 const express = require("express");
 const employee = express.Router();
 
-const { getMember, changePassword, updateMember } = require('../Controllers/OrganizationMember/organizationMemberController');
+const { getMember, changePassword, updateMember, getMyAllAsset } = require('../Controllers/OrganizationMember/organizationMemberController');
 const { createTicket, myTicketForEmployee, getTicketById } = require('../Controllers/Ticket/ticketController');
-const { getAssignedAsset } = require('../Controllers/Asset/assetController');
 const { myAssetNumber, myClosedTicket, myOpenTicket } = require('../Controllers/OrganizationMember/employeeDashboard');
 
 //middleware
@@ -18,8 +17,7 @@ employee.put("/update", verifyOrganizationMemberToken, isEmployeePresent, update
 employee.post("/createTicket", verifyOrganizationMemberToken, isEmployeePresent, uploadAttachment.array("attachment", 10), createTicket);
 employee.get("/myTickets", verifyOrganizationMemberToken, isEmployeePresent, myTicketForEmployee);
 employee.get("/myTickets/:id", verifyOrganizationMemberToken, isEmployeePresent, getTicketById);
-
-// employee.get("/myAssets", verifyOrganizationMemberToken, isEmployeePresent, getAssignedAsset);
+employee.get("/myAssets", verifyOrganizationMemberToken, isEmployeePresent, getMyAllAsset);
 
 // Dashboard
 employee.get("/myAssetNumber", verifyOrganizationMemberToken, isEmployeePresent, myAssetNumber);

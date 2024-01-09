@@ -3,7 +3,8 @@ const storeKeeper = express.Router();
 
 const { getMember, changePassword, updateMember } = require('../Controllers/OrganizationMember/organizationMemberController');
 const { createAssetByStoreKeeper, getAllAsset, updateAsset, getAssetById } = require('../Controllers/Asset/assetController');
-const { getAssetCategory, createAssetCategory } = require('../Controllers/Asset/assetcategoryController');
+const { getAssetCategory, createAssetCategory, updateAssetCategory } = require('../Controllers/Asset/assetcategoryController');
+const { totalAsset, totalCategory, totalMember } = require('../Controllers/Admin/adminDashboard');
 
 //middleware
 const { verifyOrganizationMemberToken } = require('../Middlewares/verifyJWT');
@@ -22,5 +23,11 @@ storeKeeper.put("/updateAsset/:id", verifyOrganizationMemberToken, isStoreKeeper
 // Asset Category
 storeKeeper.post("/createAssetCategory", verifyOrganizationMemberToken, isStoreKeeperPresent, createAssetCategory);
 storeKeeper.get("/assetCategories", verifyOrganizationMemberToken, isStoreKeeperPresent, getAssetCategory);
+storeKeeper.put("/updateAssetCategory/:id", verifyOrganizationMemberToken, isStoreKeeperPresent, updateAssetCategory);
+
+// Dashboard
+storeKeeper.get("/totalAsset", verifyOrganizationMemberToken, isStoreKeeperPresent, totalAsset);
+storeKeeper.get("/totalCategory", verifyOrganizationMemberToken, isStoreKeeperPresent, totalCategory);
+storeKeeper.get("/totalMember", verifyOrganizationMemberToken, isStoreKeeperPresent, totalMember);
 
 module.exports = storeKeeper;

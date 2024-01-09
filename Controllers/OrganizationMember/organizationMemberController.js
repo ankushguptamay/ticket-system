@@ -1,6 +1,7 @@
 const db = require('../../Models');
 const OrganizationMember = db.organizationMember;
 const EmployeeAsset = db.employeeAsset;
+const Asset = db.asset;
 const { login, memberRegistration, changePassword, memberUpdationAdmin, memberUpdation } = require("../../Middlewares/validate");
 const { JWT_SECRET_KEY, JWT_VALIDITY } = process.env;
 const jwt = require("jsonwebtoken");
@@ -392,8 +393,7 @@ exports.updateMember = async (req, res) => {
         // Send final success response
         res.status(200).send({
             success: true,
-            message: `Profile name updated successfully!`,
-            data: member
+            message: `Profile name updated successfully!`
         });
     } catch (err) {
         res.status(500).send({
@@ -402,3 +402,34 @@ exports.updateMember = async (req, res) => {
         });
     }
 }
+
+exports.getMyAllAsset = async (req, res) => {
+    try {
+        const asset = await EmployeeAsset.findAll({
+            where: {
+                employeeId: req.organizationMember.id
+            },
+            include: [{
+                model: Asset,
+                as: "asset",
+                attributes: {
+                    exclude: ['quantity']
+                }
+            }],
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        });
+        // Send final success response
+        res.status(200).send({
+            success: true,
+            message: `Asset fetched successfully!`,
+            data: asset
+        });
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+            message: err.message
+        });
+    }
+};

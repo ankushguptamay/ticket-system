@@ -67,3 +67,20 @@ exports.myClosedTicket = async (req, res) => {
         });
     }
 };
+
+// exports.myClosedTicket = async (req, res) => {
+//     try {
+//         const ticket = await EmployeeAsset.aggregate('country', 'DISTINCT', { plain: false })
+//         // Send final success response
+//         res.status(200).send({
+//             success: true,
+//             message: `you have ${ticket} closed/resolved ticket!`,
+//             data: ticket
+//         });
+//     } catch (err) {
+//         res.status(500).send({
+//             success: false,
+//             message: err.message
+//         });
+//     }
+// };

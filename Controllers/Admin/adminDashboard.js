@@ -49,7 +49,7 @@ exports.totalEmployee = async (req, res) => {
         // Send final success response
         res.status(200).send({
             success: true,
-            message: `you have ${member} employee!`,
+            message: `you have ${employee} employee!`,
             data: employee
         });
     } catch (err) {
