@@ -70,7 +70,8 @@ exports.createAsset = (data) => {
     const schema = joi.object().keys({
         quantity: joi.string().required(),
         itemName: joi.string().required(),
-        assetCategory: joi.string().required()
+        assetCategory: joi.string().required(),
+        itemSerialNumber: joi.string().required()
     });
     return schema.validate(data);
 }

@@ -13,7 +13,7 @@ exports.createAssetByStoreKeeper = async (req, res) => {
         if (error) {
             return res.status(400).send(error.details[0].message);
         }
-        const { itemName, assetCategory, quantity } = req.body;
+        const { itemName, assetCategory, quantity, itemSerialNumber } = req.body;
         // check name duplicacy
         const isDuplicate = await Asset.findOne({
             where: {
@@ -48,7 +48,8 @@ exports.createAssetByStoreKeeper = async (req, res) => {
             itemName: itemName,
             assetCategory: assetCategory,
             quantity: quantity,
-            assetNumber: number
+            assetNumber: number,
+            itemSerialNumber:itemSerialNumber
         });
         // Send final success response
         res.status(200).send({

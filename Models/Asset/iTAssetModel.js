@@ -16,6 +16,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         assetCategory: {
             type: DataTypes.STRING
+        },
+        itemSerialNumber: {
+            type: DataTypes.STRING
         }
     })
     return ITAsset;
