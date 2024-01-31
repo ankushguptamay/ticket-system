@@ -14,6 +14,7 @@ const SALT = 10;
 
 exports.register = async (req, res) => {
     try {
+        console.log(process.env.DB_PASSWORD);
         // Validate Body
         const { error } = adminRegistration(req.body);
         if (error) {
