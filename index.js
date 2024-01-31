@@ -34,6 +34,14 @@ app.use("/api/iTTechnician", technician);
 app.use("/api/storeKeeper", keeper);
 app.use("/common", common);
 
+app.get('/api/Admin', (req, res) => {
+  res.send('Hello World API Admin!');
+});
+
+app.get('/api', (req, res) => {
+  res.send('Hello World API!');
+});
+
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
