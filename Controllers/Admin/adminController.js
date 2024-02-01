@@ -14,7 +14,6 @@ const SALT = 10;
 
 exports.register = async (req, res) => {
     try {
-        console.log(process.env.DB_PASSWORD);
         // Validate Body
         const { error } = adminRegistration(req.body);
         if (error) {
@@ -71,7 +70,7 @@ exports.login = async (req, res) => {
         // Validate Body
         const { error } = login(req.body);
         if (error) {
-            console.log(error);
+            // console.log(error);
             return res.status(400).send(error.details[0].message);
         }
         // If Email is already present
@@ -127,7 +126,7 @@ exports.changePassword = async (req, res) => {
         // Validate Body
         const { error } = changePassword(req.body);
         if (error) {
-            console.log(error);
+            // console.log(error);
             return res.status(400).send(error.details[0].message);
         }
         const admin = await Admin.findOne({
