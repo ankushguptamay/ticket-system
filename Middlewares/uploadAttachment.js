@@ -13,9 +13,8 @@ const filter = (req, file, cb) => {
 
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        console.log(file);
-        const filePath = path.join("/tmp", "data.json");
-        // const local = path.join(`${__dirname}/../Resource`);
+        console.log(__dirname);
+        const filePath = path.join(`${__dirname}/tmp`);
         if (file.fieldname === "attachment") {
             cb(null, filePath);
         }
