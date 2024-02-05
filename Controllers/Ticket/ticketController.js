@@ -17,7 +17,6 @@ exports.createTicket = async (req, res) => {
                 message: "Please..Upload atleast one attachment!"
             });
         }
-        console.log(req.files);
         // Validate Body
         const { error } = createAttachment(req.body);
         if (error) {
@@ -62,8 +61,7 @@ exports.createTicket = async (req, res) => {
         });
         // Create attachment
         for (let i = 0; i < req.files.length; i++) {
-            // const imagePath = `./Resource/${(req.files)[i].filename}`
-            const imagePath = `/tmp/${(req.files)[i].filename}`
+            const imagePath = `./Resource/${(req.files)[i].filename}`
             const fileContent = fs.readFileSync(imagePath);
             const response = await s3UploadObject((req.files[i]).filename, fileContent);
             deleteSingleFile(req.files[i].path);
