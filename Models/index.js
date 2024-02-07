@@ -53,20 +53,20 @@ db.employeeAsset.belongsTo(db.asset, { foreignKey: 'assetId', as: 'asset' });
 db.organizationMember.hasMany(db.employeeAsset, { foreignKey: 'employeeId', as: 'emplyee_asset_association' });
 db.employeeAsset.belongsTo(db.organizationMember, { foreignKey: 'employeeId', as: 'employee' });
 
-db.emailCredential.findOne({
-    where: {
-        email: "morarjidesai19@gmail.com"
-    }
-}).then((res) => {
-    console.log(res);
-    if (!res) {
-        db.emailCredential.create({
-            email: "morarjidesai19@gmail.com",
-            plateForm: "BREVO",
-            EMAIL_API_KEY: process.env.EMAIL_API_KEY
-        });
-    }
-}).catch((err) => { console.log(err) });
+// db.emailCredential.findOne({
+//     where: {
+//         email: "morarjidesai19@gmail.com"
+//     }
+// }).then((res) => {
+//     console.log(res);
+//     if (!res) {
+//         db.emailCredential.create({
+//             email: "morarjidesai19@gmail.com",
+//             plateForm: "BREVO",
+//             EMAIL_API_KEY: process.env.EMAIL_API_KEY
+//         });
+//     }
+// }).catch((err) => { console.log(err) });
 
 // queryInterface.addColumn("iTAssets", "itemSerialNumber", { type: DataTypes.STRING }).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
 
