@@ -68,6 +68,6 @@ db.employeeAsset.belongsTo(db.organizationMember, { foreignKey: 'employeeId', as
 //     }
 // }).catch((err) => { console.log(err) });
 
-queryInterface.addColumn("iTAssets", "itemSerialNumber", { type: DataTypes.STRING }).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
+// queryInterface.addColumn("iTAssets", "itemSerialNumber", { type: DataTypes.STRING }).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
 
 module.exports = db;
