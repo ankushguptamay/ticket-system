@@ -161,3 +161,10 @@ exports.approveOrDecline = (data) => {
     });
     return schema.validate(data);
 }
+
+exports.updateBooking = (data) => {
+    const schema = joi.object().keys({
+        bookingStatus: joi.string().valid('Open', 'Close').required()
+    });
+    return schema.validate(data);
+}

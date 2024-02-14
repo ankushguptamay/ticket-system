@@ -7,7 +7,7 @@ const { ticketForAdmin, getTicketById, updateTicketByAdmin } = require('../Contr
 const { createAssetCategory, getAssetCategory, deleteAssetCategory, updateAssetCategory } = require('../Controllers/Asset/assetcategoryController');
 const { getAllAsset, getAllAssetAssignTOEmployee, getAssetById, updateAsset } = require('../Controllers/Asset/assetController');
 const { totalAsset, totalCategory, totalEmployee, totalMember } = require('../Controllers/Admin/adminDashboard');
-const { bookingById, allBooking, approveOrDecline } = require('../Controllers/OrganizationMember/bookingController');
+const { bookingById, allBooking, approveOrDecline, updateBooking } = require('../Controllers/OrganizationMember/bookingController');
 
 //middleware
 const { verifyOrganizationMemberToken } = require('../Middlewares/verifyJWT');
@@ -50,6 +50,7 @@ admin.get("/totalMember", verifyOrganizationMemberToken, isAdminPresent, totalMe
 // Booking
 admin.get("/booking", verifyOrganizationMemberToken, isAdminPresent, allBooking);
 admin.get("/booking/:id", verifyOrganizationMemberToken, isAdminPresent, bookingById);
-// admin.put("/approveOrDecline/:id", verifyOrganizationMemberToken, isAdminPresent, approveOrDecline);
+admin.put("/approveOrDecline/:id", verifyOrganizationMemberToken, isAdminPresent, approveOrDecline);
+admin.put("/updateBooking/:id", verifyOrganizationMemberToken, isAdminPresent, updateBooking);
 
 module.exports = admin;

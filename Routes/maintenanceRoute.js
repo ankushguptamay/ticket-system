@@ -4,6 +4,7 @@ const maintenance = express.Router();
 const { getMember, changePassword, getAllEmployee, updateMember } = require('../Controllers/OrganizationMember/organizationMemberController');
 const { myTicketForResolver, updateTicketByResolver, getTicketById } = require('../Controllers/Ticket/ticketController');
 const { myClosedTicket, myOpenTicket, myTicketNumber } = require('../Controllers/OrganizationMember/itTechnicianDashboard');
+const { bookingById, myBookingForMaintenance, updateBooking } = require('../Controllers/OrganizationMember/bookingController');
 
 //middleware
 const { verifyOrganizationMemberToken } = require('../Middlewares/verifyJWT');
@@ -25,5 +26,10 @@ maintenance.put("/updateTicket/:id", verifyOrganizationMemberToken, isMaintenanc
 maintenance.get("/myTicketNumber", verifyOrganizationMemberToken, isMaintenancePresent, myTicketNumber);
 maintenance.get("/openTicket", verifyOrganizationMemberToken, isMaintenancePresent, myOpenTicket);
 maintenance.get("/closedTicket", verifyOrganizationMemberToken, isMaintenancePresent, myClosedTicket);
+
+// Booking
+maintenance.put("/updateBooking/:id", verifyOrganizationMemberToken, isMaintenancePresent, updateBooking);
+maintenance.get("/myBooking", verifyOrganizationMemberToken, isMaintenancePresent, myBookingForMaintenance);
+maintenance.get("/bookingById/:id", verifyOrganizationMemberToken, isMaintenancePresent, bookingById);
 
 module.exports = maintenance;
