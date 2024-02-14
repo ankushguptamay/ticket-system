@@ -29,6 +29,7 @@ db.asset = require('./Asset/iTAssetModel.js')(sequelize, Sequelize);
 db.iTTechnicians_Ticket = require('./Ticket/iTTechnicians_TicketsModel.js')(sequelize, Sequelize);
 db.employeeAsset = require('./Organization/emplyeeAsignAssetModel.js')(sequelize, Sequelize);
 db.assetCategory = require('./Asset/assetCategoryModel.js')(sequelize, Sequelize);
+db.booking = require('./Organization/bookingModel.js')(sequelize, Sequelize);
 
 // Association bt ticket and ticket attachment
 db.ticket.hasMany(db.ticketAttachment, { foreignKey: 'ticketId', as: 'attachment' });
@@ -69,6 +70,10 @@ db.employeeAsset.belongsTo(db.organizationMember, { foreignKey: 'employeeId', as
 // }).catch((err) => { console.log(err) });
 
 
-// queryInterface.addColumn("iTAssets", "itemSerialNumber", { type: DataTypes.STRING }).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
+// queryInterface.addColumn("tickets", "maintenance_security", { type: DataTypes.STRING }).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
+// queryInterface.changeColumn("organizationMembers", "post", {
+//     type: DataTypes.STRING,
+//     defaultValue: 'EMPLOYEE'
+// }).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
 
 module.exports = db;

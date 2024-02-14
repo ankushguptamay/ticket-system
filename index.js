@@ -7,6 +7,7 @@ const employee = require('./Routes/employeeRoute');
 const technician = require('./Routes/iTTechnicianRoute');
 const keeper = require('./Routes/storeKeeperRoute');
 const common = require('./Routes/commonRoute');
+const maintenance = require('./Routes/maintenanceRoute');
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use("/api/employee", employee);
 app.use("/api/iTTechnician", technician);
 app.use("/api/storeKeeper", keeper);
 app.use("/common", common);
+app.use("/api/maintenance", maintenance);
 
 app.get('/api/Admin', (req, res) => {
   res.send('Hello World API Admin!');

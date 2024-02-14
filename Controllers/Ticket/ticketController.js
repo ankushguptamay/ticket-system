@@ -11,19 +11,19 @@ const { deleteSingleFile } = require("../../Util/deleteFile");
 
 exports.createTicket = async (req, res) => {
     try {
-        if (req.files.length < 1) {
-            return res.status(400).send({
-                success: false,
-                message: "Please..Upload atleast one attachment!"
-            });
-        }
+        // if (req.files.length < 1) {
+        //     return res.status(400).send({
+        //         success: false,
+        //         message: "Please..Upload atleast one attachment!"
+        //     });
+        // }
         // Validate Body
         const { error } = createAttachment(req.body);
         if (error) {
             return res.status(400).send(error.details[0].message);
         }
         // Generating ticket number
-        const { ticketCategory, subject, details } = req.body;
+        const { ticketCategory, subject, details, maintenance_security } = req.body;
         // 1.Today Date
         const date = JSON.stringify(new Date((new Date).getTime() - (24 * 60 * 60 * 1000)));
         const today = `${date.slice(1, 12)}18:30:00.000Z`;
@@ -55,6 +55,7 @@ exports.createTicket = async (req, res) => {
         const ticket = await Ticket.create({
             ticketNumber: number,
             ticketCategory: ticketCategory,
+            maintenance_security: maintenance_security,
             subject: subject,
             details: details,
             createrId: req.organizationMember.id
@@ -74,26 +75,38 @@ exports.createTicket = async (req, res) => {
                 attachment_MimeType: req.files[i].mimetype
             });
         }
-        // find all IT technician
-        const technician = await OrganizationMember.findAll({
+        let post;
+        if (ticketCategory === 'IT Software' || ticketCategory === 'IT Hardware') {
+            // find all IT technician
+            post = "IT TECHNICIAN";
+        } else if (ticketCategory === 'Maintenance' || ticketCategory === 'Security Related') {
+            // find all maintenance
+            post = "MAINTENANCE";
+        } else {
+            return res.status(200).send({
+                success: true,
+                message: `Ticket created But Ticket category does not match!`
+            });
+        }
+        const resolver = await OrganizationMember.findAll({
             where: {
-                post: "IT TECHNICIAN"
+                post: post
             },
             order: [
                 ["createdAt", "ASC"]
             ]
         });
-        // Assign to technician
-        const totalTechnician = technician.length;
-        if (totalTechnician === 0) {
+        // Assign to resolver
+        const totalResolver = resolver.length;
+        if (totalResolver === 0) {
             return res.status(200).send({
                 success: true,
-                message: `Ticket created But Technician is not available! Ticket Number ${number}`
+                message: `Ticket created But Resolver is not available! Ticket Number ${number}`
             });
-        } else if (totalTechnician === 1) {
+        } else if (totalResolver === 1) {
             await ITTechnicians_Ticket.create({
                 ticketId: ticket.id,
-                iTTechnicianId: technician[0].id
+                iTTechnicianId: resolver[0].id
             });
         } else {
             const todaysTotalTicket = await Ticket.count({
@@ -101,17 +114,17 @@ exports.createTicket = async (req, res) => {
                     createdAt: { [Op.gte]: today }
                 }
             });
-            const remain = parseInt(todaysTotalTicket) % parseInt(totalTechnician);
+            const remain = parseInt(todaysTotalTicket) % parseInt(totalResolver);
             if (remain === 0) {
-                const lastTechnician = parseInt(totalTechnician) - 1;
+                const lastResolver = parseInt(totalResolver) - 1;
                 await ITTechnicians_Ticket.create({
                     ticketId: ticket.id,
-                    iTTechnicianId: technician[lastTechnician].id
+                    iTTechnicianId: resolver[lastResolver].id
                 });
             } else {
                 await ITTechnicians_Ticket.create({
                     ticketId: ticket.id,
-                    iTTechnicianId: technician[remain - 1].id
+                    iTTechnicianId: resolver[remain - 1].id
                 });
             }
         }
@@ -189,7 +202,7 @@ exports.myTicketForEmployee = async (req, res) => {
     }
 };
 
-exports.myTicketForITTechnician = async (req, res) => {
+exports.myTicketForResolver = async (req, res) => {
     try {
         // Pagination
         const { page, recordLimit, search } = req.query;
@@ -330,7 +343,7 @@ exports.ticketForAdmin = async (req, res) => {
     }
 };
 
-exports.updateTicketByTechnician = async (req, res) => {
+exports.updateTicketByResolver = async (req, res) => {
     try {
         const { status, subject, ticketCategory, reply } = req.body;
         const assign = await ITTechnicians_Ticket.findOne({

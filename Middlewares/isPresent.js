@@ -38,7 +38,7 @@ exports.isEmployeePresent = async (req, res, next) => {
         if (!organizationMember) {
             return res.status(400).json({
                 success: false,
-                message: "Employee is not present!"
+                message: `${req.organizationMember.post} is not present!`
             })
         }
         next();
@@ -62,7 +62,7 @@ exports.isITTechnicianPresent = async (req, res, next) => {
         if (!organizationMember) {
             return res.status(400).json({
                 success: false,
-                message: "IT technician is not present!"
+                message: `${req.organizationMember.post} is not present!`
             })
         }
         next();
@@ -86,7 +86,31 @@ exports.isStoreKeeperPresent = async (req, res, next) => {
         if (!organizationMember) {
             return res.status(400).json({
                 success: false,
-                message: "Store keeper is not present!"
+                message: `${req.organizationMember.post} is not present!`
+            })
+        }
+        next();
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+}
+
+exports.isMaintenancePresent = async (req, res, next) => {
+    try {
+        const organizationMember = await OrganizationMember.findOne({
+            where: {
+                [Op.and]: [
+                    { id: req.organizationMember.id }, { email: req.organizationMember.email }, { post: "MAINTENANCE" }
+                ]
+            }
+        });
+        if (!organizationMember) {
+            return res.status(400).json({
+                success: false,
+                message: `${req.organizationMember.post} is not present!`
             })
         }
         next();

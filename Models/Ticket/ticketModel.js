@@ -8,6 +8,9 @@ module.exports = (sequelize, DataTypes) => {
         ticketCategory: {
             type: DataTypes.STRING
         },
+        maintenance_security: {
+            type: DataTypes.STRING
+        },
         subject: {
             type: DataTypes.STRING
         },

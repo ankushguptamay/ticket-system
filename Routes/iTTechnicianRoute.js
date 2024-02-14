@@ -2,7 +2,7 @@ const express = require("express");
 const iTechnician = express.Router();
 
 const { getMember, changePassword, getAllEmployee, updateMember } = require('../Controllers/OrganizationMember/organizationMemberController');
-const { myTicketForITTechnician, updateTicketByTechnician, getTicketById } = require('../Controllers/Ticket/ticketController');
+const { myTicketForResolver, updateTicketByResolver, getTicketById } = require('../Controllers/Ticket/ticketController');
 const { getAllAssetForITTechnician, assignAssetToEmployeeByTechnician } = require('../Controllers/Asset/assetController');
 const { getAssetCategory } = require('../Controllers/Asset/assetcategoryController');
 const { myClosedTicket, myOpenTicket, myTicketNumber } = require('../Controllers/OrganizationMember/itTechnicianDashboard');
@@ -19,9 +19,9 @@ iTechnician.put("/update", verifyOrganizationMemberToken, isITTechnicianPresent,
 iTechnician.get("/employees", verifyOrganizationMemberToken, isITTechnicianPresent, getAllEmployee);
 
 // Ticket
-iTechnician.get("/myTickets", verifyOrganizationMemberToken, isITTechnicianPresent, myTicketForITTechnician);
+iTechnician.get("/myTickets", verifyOrganizationMemberToken, isITTechnicianPresent, myTicketForResolver);
 iTechnician.get("/myTickets/:id", verifyOrganizationMemberToken, isITTechnicianPresent, getTicketById);
-iTechnician.put("/updateTicket/:id", verifyOrganizationMemberToken, isITTechnicianPresent, updateTicketByTechnician);
+iTechnician.put("/updateTicket/:id", verifyOrganizationMemberToken, isITTechnicianPresent, updateTicketByResolver);
 
 // Asset
 iTechnician.get("/assets", verifyOrganizationMemberToken, isITTechnicianPresent, getAllAssetForITTechnician);

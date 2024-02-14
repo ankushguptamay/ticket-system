@@ -46,7 +46,7 @@ exports.memberRegistration = (data) => {
         name: joi.string().min(3).max(30).required(),
         email: joi.string().email().required().label('Email'),
         mobileNumber: joi.string().length(10).pattern(/^[0-9]+$/).required(),
-        post: joi.string().required(),
+        post: joi.string().valid('EMPLOYEE', 'ADMIN', 'IT TECHNICIAN', 'STORE KEEPER', "MAINTENANCE").required(),
         department: joi.string().required(),
         attendanceId: joi.string().required(),
         password: joi.string()
@@ -59,7 +59,8 @@ exports.memberRegistration = (data) => {
 
 exports.createAttachment = (data) => {
     const schema = joi.object().keys({
-        ticketCategory: joi.string().required(),
+        ticketCategory: joi.string().valid('IT Software', 'IT Hardware', 'Maintenance', 'Security Related').required(),
+        maintenance_security: joi.string().optional(),
         subject: joi.string().required(),
         details: joi.string().max(1000).required()
     });
@@ -133,13 +134,30 @@ exports.generatePassword = (data) => {
     const schema = joi.object().keys({
         email: joi.string().email().required().label('Email'),
         password: joi.string()
-        // .regex(RegExp(pattern))
-        .required()
-        .min(8),
+            // .regex(RegExp(pattern))
+            .required()
+            .min(8),
         confirmPassword: joi.string()
-        // .regex(RegExp(pattern))
-        .required()
-        .min(8)
+            // .regex(RegExp(pattern))
+            .required()
+            .min(8)
+    });
+    return schema.validate(data);
+}
+
+exports.createBooking = (data) => {
+    const schema = joi.object().keys({
+        startTime: joi.string().required(),
+        endTime: joi.string().required(),
+        venue: joi.string().required(),
+        bookingFor: joi.string().required()
+    });
+    return schema.validate(data);
+}
+
+exports.approveOrDecline = (data) => {
+    const schema = joi.object().keys({
+        adminApproval: joi.string().valid('Approve', 'Decline').required()
     });
     return schema.validate(data);
 }

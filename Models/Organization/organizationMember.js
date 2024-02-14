@@ -27,9 +27,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         post: {
             type: DataTypes.STRING,
-            validate: {
-                isIn: [['EMPLOYEE', 'ADMIN', 'IT TECHNICIAN', 'STORE KEEPER']]
-            },
             defaultValue: 'EMPLOYEE'
         },
         attendanceId: {
