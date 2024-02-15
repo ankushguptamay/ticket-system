@@ -70,7 +70,7 @@ db.employeeAsset.belongsTo(db.organizationMember, { foreignKey: 'employeeId', as
 // }).catch((err) => { console.log(err) });
 
 
-// queryInterface.addColumn("tickets", "maintenance_security", { type: DataTypes.STRING }).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
+queryInterface.addColumn("tickets", "maintenance_security", { type: DataTypes.STRING }).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
 // queryInterface.changeColumn("organizationMembers", "post", {
 //     type: DataTypes.STRING,
 //     defaultValue: 'EMPLOYEE'
