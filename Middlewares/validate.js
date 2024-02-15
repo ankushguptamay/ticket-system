@@ -59,7 +59,7 @@ exports.memberRegistration = (data) => {
 
 exports.createAttachment = (data) => {
     const schema = joi.object().keys({
-        ticketCategory: joi.string().valid('IT Software', 'IT Hardware', 'Maintenance', 'Security Related').required(),
+        ticketCategory: joi.string().valid('ITSoftware', 'ITHardware', 'Maintenance', 'Security Related').required(),
         maintenance_security: joi.string().optional(),
         subject: joi.string().required(),
         details: joi.string().max(1000).required()

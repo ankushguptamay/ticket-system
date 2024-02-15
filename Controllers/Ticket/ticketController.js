@@ -76,7 +76,7 @@ exports.createTicket = async (req, res) => {
             });
         }
         let post;
-        if (ticketCategory === 'IT Software' || ticketCategory === 'IT Hardware') {
+        if (ticketCategory === 'ITSoftware' || ticketCategory === 'ITHardware') {
             // find all IT technician
             post = "IT TECHNICIAN";
         } else if (ticketCategory === 'Maintenance' || ticketCategory === 'Security Related') {
