@@ -11,10 +11,10 @@ const maintenance = require("./Routes/maintenanceRoute");
 
 const app = express();
 
-var corsOptions = {
-  origin: "https://ticket.yogamdniy.co.in/",
-  optionsSuccessStatus: 200,
-};
+// var corsOptions = {
+//   origin: "https://ticket.yogamdniy.co.in/",
+//   optionsSuccessStatus: 200,
+// };
 
 const db = require("./Models");
 db.sequelize
@@ -26,7 +26,7 @@ db.sequelize
     console.log(err);
   });
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
