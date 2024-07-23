@@ -10,7 +10,7 @@ const common = require("./Routes/commonRoute");
 const maintenance = require("./Routes/maintenanceRoute");
 
 const corsOptions = {
-  origin: ["https://ticket.yogamdniy.co.in/", process.env.CLIENT_URL],
+  origin: ["https://ticket.yogamdniy.co.in", process.env.CLIENT_URL],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
