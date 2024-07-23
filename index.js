@@ -9,12 +9,13 @@ const keeper = require("./Routes/storeKeeperRoute");
 const common = require("./Routes/commonRoute");
 const maintenance = require("./Routes/maintenanceRoute");
 
-const app = express();
+const corsOptions = {
+  origin: ["https://ticket.yogamdniy.co.in/", process.env.CLIENT_URL],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
 
-// var corsOptions = {
-//   origin: "https://ticket.yogamdniy.co.in/",
-//   optionsSuccessStatus: 200,
-// };
+const app = express();
 
 const db = require("./Models");
 db.sequelize
@@ -26,7 +27,7 @@ db.sequelize
     console.log(err);
   });
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
