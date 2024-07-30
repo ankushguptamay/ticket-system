@@ -118,7 +118,7 @@ exports.getAllAsset = async (req, res) => {
 
 exports.getAssetByAssetCategory = async (req, res) => {
   try {
-    if (!req.body.assetCategory) {
+    if (!req.query.assetCategory) {
       return res.status(400).send({
         success: false,
         message: `Please select an asset category!`,
@@ -127,7 +127,7 @@ exports.getAssetByAssetCategory = async (req, res) => {
     // Get Tickets
     const asset = await Asset.findAll({
       where: {
-        assetCategory: req.body.assetCategory,
+        assetCategory: req.query.assetCategory,
       },
       order: [["createdAt", "ASC"]],
     });
