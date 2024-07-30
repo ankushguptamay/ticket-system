@@ -266,11 +266,11 @@ exports.deleteAsset = async (req, res) => {
         message: `This asset have been assigned to employee! Can not delete this asset!`,
       });
     }
-    await asset.destory();
+    await asset.destroy();
     // Send final success response
     res.status(200).send({
       success: true,
-      message: `Asset updated successfully!`,
+      message: `Asset deleted successfully!`,
     });
   } catch (err) {
     res.status(500).send({
